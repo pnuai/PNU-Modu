@@ -1,8 +1,8 @@
 # 💎 PNU Slate: 차세대 온라인 브로슈어 CMS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Docusaurus](https://img.shields.io/badge/Docusaurus-3.x-green.svg)](https://docusaurus.io/)
-[![React](https://img.shields.io/badge/React-19.x-blue.svg)](https://react.dev/)
+[![Docusaurus](https://img.shields.io/badge/Docusaurus-3.10.1-green.svg)](https://docusaurus.io/)
+[![React](https://img.shields.io/badge/React-19.0.0-blue.svg)](https://react.dev/)
 
 **PNU Slate**는 **부산대학교 AI융합교육원**을 위해 설계된 고성능 프리미엄 온라인 브로슈어 플랫폼입니다. **Docusaurus 3**의 강력한 정적 사이트 생성 기능과 자체 개발한 **Git 기반 웹 CMS**를 결합하여, 코딩 지식이 없는 사용자도 전문적인 디지털 콘텐츠를 손쉽게 관리하고 배포할 수 있도록 지원합니다.
 
@@ -34,15 +34,18 @@ graph TD
 
 ---
 
-## 🛠 기술 스택
+## 🛠 기술 스택 상세 (Tech Stack)
 
-| 분류 | 사용 기술 |
-| :--- | :--- |
-| **코어 프레임워크** | [Docusaurus 3.x](https://docusaurus.io/), React 19 |
-| **스타일링** | Vanilla CSS3, Infima 테마 엔진 |
-| **관리자 포탈** | Vanilla JS, Toast UI Editor, HTML5 |
-| **인프라** | GitHub REST API, GitHub Actions, GitHub Pages |
-| **콘텐츠 포맷** | MDX (Markdown + JSX) |
+이 프로젝트는 최신 라이브러리와 프레임워크를 기반으로 구축되었습니다.
+
+| 분류 | 컴포넌트 | 상세 버전 |
+| :--- | :--- | :--- |
+| **코어 프레임워크** | **React** | **v19.0.0** |
+| **사이트 엔진** | **Docusaurus** | **v3.10.1** (Faster 모드 적용) |
+| **콘텐츠 엔진** | **MDX** | **v3.0.0** |
+| **스타일링** | Vanilla CSS3 | Infima 테마 엔진 (Customized) |
+| **관리자 UI** | Vanilla JS | Toast UI Editor 기반 CMS |
+| **빌드/배포** | GitHub Actions | Node.js v20 LTS 환경 |
 
 ---
 
