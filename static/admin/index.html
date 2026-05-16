@@ -145,19 +145,6 @@
   #toast-editor{flex:1;min-height:0;margin-bottom:20px;border-radius:12px;overflow:hidden;border:1px solid var(--gray-200)}
   .toastui-editor-defaultUI{border:none !important;height:100% !important}
 
-  /* 진단용: 미리보기 내부의 모든 제목을 강제로 노출 */
-  .toastui-editor-contents h1, 
-  .toastui-editor-contents h2, 
-  .toastui-editor-contents h3 {
-    border: 2px solid red !important;
-    color: black !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: block !important;
-    min-height: 20px !important;
-    background: yellow !important; /* 노란 배경으로 눈에 확 띄게 */
-  }
-
   /* SPINNER */
   .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -538,9 +525,10 @@ async function injectCustomCSS() {
     
     // Docusaurus 본문 클래스를 Toast UI 미리보기 클래스로 치환하여 스타일 완벽 적용
     css = css.replace(/\.theme-doc-markdown/g, '.toastui-editor-contents');
+    css = css.replace(/\.markdown/g, '.toastui-editor-contents');
     
-    // 미리보기 화면의 배경색 등 기본 스타일 보정
-    css += `\n.toastui-editor-contents { background: white; padding: 32px 40px !important; border-radius: 16px; border: 1px solid #e2e8f0; }`;
+    // 미리보기 화면의 배경색 및 기본 레이아웃 보정
+    css += `\n.toastui-editor-contents { background: white; padding: 32px 40px !important; border-radius: 16px; border: 1px solid #e2e8f0; min-height: 100%; }`;
     
     const style = document.createElement('style');
     style.innerHTML = css;

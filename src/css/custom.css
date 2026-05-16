@@ -309,6 +309,10 @@ main .col--3 {
 /* 소제목 */
 
 .markdown h2 {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
   margin-top: 4rem;
   margin-bottom: 1.2rem;
   padding-left: 1rem;
