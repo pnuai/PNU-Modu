@@ -545,6 +545,14 @@ async function injectCustomCSS() {
     // 제목이 투명해지거나 사라지는 현상을 원천 차단하는 강제 스타일 주입
     css += `\n.toastui-editor-contents h1, .toastui-editor-contents h2, .toastui-editor-contents h3 { border: 3px solid red !important; background: yellow !important; color: black !important; display: block !important; visibility: visible !important; opacity: 1 !important; min-height: 50px !important; }`;
     
+    // 미리보기 내부의 태그 종류를 분석하여 디버깅 정보 제공
+    setTimeout(() => {
+      const tags = Array.from(document.querySelector('.toastui-editor-contents').querySelectorAll('*'))
+        .map(el => el.tagName.toLowerCase());
+      const uniqueTags = [...new Set(tags)];
+      document.getElementById('debug-status').innerText += ` | 발견된 태그: ${uniqueTags.join(', ')}`;
+    }, 500);
+
     const style = document.createElement('style');
     style.id = 'injected-custom-css';
     style.innerHTML = css;
