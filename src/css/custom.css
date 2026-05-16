@@ -1,4 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+/* 지마켓 산스 */
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/GmarketSansLight.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/GmarketSansMedium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/GmarketSansBold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
 
 :root {
   --ifm-color-primary: #1a4fa0;
@@ -14,7 +36,29 @@
   --navy-light: #1e3a8a; /* 기존 navy보다 약간 밝은 색상 */
   --blue: #1a4fa0;
   --gold: #f59e0b;
+
+  /* 폰트 패밀리 변수 */
+  --font-noto: "Noto Sans KR", sans-serif;
+  --font-pretendard: "Pretendard", sans-serif;
+  --font-gmarket: "GmarketSans", sans-serif;
+  --font-nanum: "Nanum Gothic", sans-serif;
+
+  /* 규격 프리셋 변수 (실제 안쪽 '종이' 너비 기준) */
+  --layout-width-slim: 700px;     /* 전단지 / 리플렛 */
+  --layout-width-compact: 900px;  /* B5 리플렛 */
+  --layout-width-standard: 1100px; /* A4 브로슈어 */
+  --layout-width-poster: 1400px;   /* A3 포스터 */
+  --layout-width-cinema: 1750px;   /* 와이드 시네마 */
+  
+  --content-max-width: var(--layout-width-standard);
 }
+
+/* 레이아웃 전환 모드 */
+[data-layout="slim"] { --content-max-width: var(--layout-width-slim); }
+[data-layout="compact"] { --content-max-width: var(--layout-width-compact); }
+[data-layout="standard"] { --content-max-width: var(--layout-width-standard); }
+[data-layout="poster"] { --content-max-width: var(--layout-width-poster); }
+[data-layout="cinema"] { --content-max-width: var(--layout-width-cinema); }
 
 /* 전체 배경 */
 
@@ -28,22 +72,30 @@ body {
   padding-top: 30px;
   padding-bottom: 80px;
   background: var(--bg);
-  max-width: 1400px;
-  margin: 0; /* 중앙 정렬 해제하고 좌측으로 밀착 */
-  padding-left: 48px; /* 왼쪽 여백 조금 주기 */
+  max-width: 100% !important; /* 바깥쪽은 제한을 품 */
+  margin: 0;
+  padding-left: 48px;
   width: 100%;
 }
 
-/* 문서 영역 */
+/* Docusaurus 기본 컨테이너 너비 제한 해제 */
+.main-wrapper .container {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+/* 문서 영역 (실제 종이 규격이 적용되는 부분) */
 
 .theme-doc-markdown {
   background: white;
   width: 100%;
-  max-width: 100%;
-  padding: 32px 40px; /* 기존 48px에서 상하 여백을 줄여 정보량 증가 */
+  max-width: var(--content-max-width) !important; /* 안쪽 네모에 규격 적용 */
+  padding: 40px 50px; /* 여백을 넉넉히 주어 고급스러운 느낌 유지 */
   border-radius: 16px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.02);
+  transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* 규격 변경 시 부드럽게 */
 }
 
 /* 컬럼 및 본문 확장 보장 (줄바꿈 방지 및 우측 여백 제거) */

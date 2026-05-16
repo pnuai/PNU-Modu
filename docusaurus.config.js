@@ -37,6 +37,7 @@ const config = {
   
   customFields: {
     firstDocLink,
+    defaultLayout: "standard", // "slim", "compact", "standard", "poster", "cinema"
   },
 
   tagline: "부산대학교 AI융합교육원 온라인 브로슈어",

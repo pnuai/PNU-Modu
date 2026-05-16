@@ -14,18 +14,30 @@ import React from 'react';
  *   <Col>1</Col><Col>2</Col><Col>3</Col>
  * </Columns>
  */
-export default function Columns({ children, cols = 2, gap = '28px' }) {
+export default function Columns({ children, gap = '32px' }) {
   return (
     <div
       style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        display: 'flex',
+        flexWrap: 'wrap', // 모바일에서 세로로 쌓이게 함
         gap,
-        margin: '2rem 0',
-        alignItems: 'start',
+        margin: '2.5rem 0',
+        alignItems: 'stretch',
       }}
     >
-      {children}
+      {React.Children.map(children, (child) => {
+        if (!child) return null;
+        return (
+          <div style={{ 
+            flex: '1 1 300px', // 최소 300px 확보 후 남은 공간 채움
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {child}
+          </div>
+        );
+      })}
     </div>
   );
 }

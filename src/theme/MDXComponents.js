@@ -6,6 +6,7 @@ import HeroButton from '@site/src/components/HeroButton';
 import Callout from '@site/src/components/Callout';
 import { StepList, StepItem } from '@site/src/components/StepList';
 import Details from '@site/src/components/Details';
+import Text from '@site/src/components/Text';
 
 // 모든 .md / .mdx 파일에서 import 없이 바로 사용 가능
 export default {
@@ -19,4 +20,5 @@ export default {
   StepList,
   StepItem,
   Details,
+  Text,
 };
