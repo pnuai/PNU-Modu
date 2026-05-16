@@ -744,21 +744,18 @@ main .col--3 {
 }
 
 /* =========================================
-   PNU Slate PDF / Print System (Standard A4)
-   (웹페이지 캡처가 아닌 '실제 문서 출력' 전문 시스템)
+   PNU Slate Print System v2
+   (안정적인 A4 브로슈어 출력 시스템)
    ========================================= */
 
 @media print {
-  /* 페이지 기본 설정 (A4 Portrait 표준) */
   @page {
     size: A4 portrait;
-    margin: 12mm;
+    margin: 16mm;
   }
 
   html,
   body {
-    width: 100%;
-    height: auto;
     background: white !important;
     overflow: visible !important;
     padding: 0 !important;
@@ -783,36 +780,36 @@ main .col--3 {
     display: none !important;
   }
 
-  /* 모든 레이아웃 컨테이너 강제 확장 (중앙 정렬 및 여백 제거) */
+  /* Docusaurus 레이아웃 강제 초기화 (all: unset으로 웹 그리드 제거) */
   .main-wrapper,
-  main,
   .container,
   .row,
-  .col,
+  main,
   div[class*="docItemCol_"],
   div[class*="docItemContainer_"] {
+    all: unset !important;
+    display: block !important;
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    transform: none !important;
-    box-shadow: none !important;
-    border: none !important;
+    background: white !important;
   }
 
-  /* 핵심 문서 영역 (종이 전체 너비 활용) */
-  .theme-doc-markdown {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
+  /* 핵심 문서 영역 (순수 블록 구조) */
+  article,
+  .theme-doc-markdown,
+  .markdown {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
     margin: 0 !important;
     padding: 0 !important;
     background: white !important;
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
-    display: block !important;
+    overflow: visible !important;
   }
 
   /* 인쇄용 고품격 타이포그래피 (pt 단위 사용) */
@@ -863,8 +860,8 @@ main .col--3 {
   img,
   .brochureHero,
   li {
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   /* 이미지 최적화 */
@@ -872,7 +869,6 @@ main .col--3 {
     max-width: 100% !important;
     height: auto !important;
     border-radius: 8px !important;
-    box-shadow: none !important;
   }
 
   /* 코드 블록 (잘림 방지 및 자동 줄바꿈) */
