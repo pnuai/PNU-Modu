@@ -766,42 +766,96 @@ main .col--3 {
 /* 목차(TOC) 클릭 시 헤더에 가려지지 않도록 스크롤 위치 보정 (표준 방식) */
 
 /* =========================================
-   [긴급] 제목 렌더링 및 앵커 충돌 복구
+   [최종] 타이포그래피 전체 복구 (Reset CSS 충돌 해결)
    ========================================= */
 
-/* 제목 텍스트 강제 노출 및 텍스트 밀림(text-indent) 방지 */
+/* 제목 계층 구조 복구 */
+.theme-doc-markdown h1,
+.markdown h1,
+.toastui-editor-contents h1 {
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  color: var(--navy) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1.5rem !important;
+  display: block !important;
+}
+
 .theme-doc-markdown h2,
 .markdown h2,
 .toastui-editor-contents h2 {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  color: #222 !important;
   font-size: 2.2rem !important;
   font-weight: 800 !important;
-  text-indent: 0 !important;
+  line-height: 1.3 !important;
+  color: var(--navy) !important;
+  margin-top: 3rem !important;
+  margin-bottom: 1.2rem !important;
+  padding-left: 1rem !important;
+  border-left: 6px solid var(--gold) !important;
+  display: block !important;
 }
 
 .theme-doc-markdown h3,
 .markdown h3,
 .toastui-editor-contents h3 {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  color: #222 !important;
-  font-size: 1.8rem !important;
+  font-size: 1.7rem !important;
   font-weight: 700 !important;
-  text-indent: 0 !important;
+  line-height: 1.4 !important;
+  color: var(--navy-light) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  display: block !important;
 }
 
-/* 깨진 앵커(hash-link) 동작 강제 중단 */
-.theme-doc-markdown .hash-link,
-.markdown .hash-link,
-.toastui-editor-contents .hash-link {
+.theme-doc-markdown h4,
+.markdown h4,
+.toastui-editor-contents h4 {
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+  color: #444 !important;
+  display: block !important;
+}
+
+/* 리스트 스타일 및 간격 복구 */
+.theme-doc-markdown ul,
+.theme-doc-markdown ol,
+.markdown ul,
+.markdown ol,
+.toastui-editor-contents ul,
+.toastui-editor-contents ol {
+  padding-left: 1.8rem !important;
+  margin-bottom: 1.2rem !important;
+  display: block !important;
+}
+
+.theme-doc-markdown li,
+.markdown li,
+.toastui-editor-contents li {
+  display: list-item !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* 인용구(blockquote) 디자인 복구 */
+.theme-doc-markdown blockquote,
+.markdown blockquote,
+.toastui-editor-contents blockquote {
+  border-left: 5px solid #e2e8f0 !important;
+  padding: 1rem 1.5rem !important;
+  color: #64748b !important;
+  background: #f8fafc !important;
+  margin: 1.5rem 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  display: block !important;
+}
+
+/* 앵커 및 가상 요소 완전 박멸 */
+.hash-link, 
+.anchor {
   display: none !important;
 }
 
-/* 가상 요소(::before, ::after)에 의한 강제 기호 노출 차단 */
 .theme-doc-markdown h2::before,
 .theme-doc-markdown h3::before,
 .markdown h2::before,
