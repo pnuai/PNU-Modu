@@ -796,39 +796,39 @@ main .col--3 {
     box-shadow: none !important;
   }
 
-  /* 3. MDX Columns 정밀 안정화 (본문 내 row만 타겟팅) */
+  /* 3. MDX Columns 정밀 안정화 (명시적 너비 계산 시스템) */
   .theme-doc-markdown .row {
     display: flex !important;
     flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    gap: 24px !important;
+    flex-wrap: wrap !important; /* 유연한 대응 허용 */
+    gap: 16px !important;
     width: 100% !important;
     align-items: flex-start !important;
-    margin: 1.5rem 0 !important;
+    margin: 24px 0 !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
 
-  /* Docusaurus 컬럼 기본 설정 */
+  /* 기본 컬럼 리셋 */
   .theme-doc-markdown .col {
-    flex: 1 1 0 !important;
-    width: 0 !important;
-    min-width: 0 !important;
     padding: 0 !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    flex: 1 1 0 !important; /* 기본값 */
   }
 
-  /* 3컬럼 (col--4) 전용 너비 */
+  /* 3컬럼 (col--4) 전용 정밀 너비 */
   .theme-doc-markdown .col--4 {
-    width: 33.333% !important;
-    max-width: 33.333% !important;
-    flex: 0 0 33.333% !important;
+    width: calc(33.333% - 11px) !important;
+    flex: 0 0 calc(33.333% - 11px) !important;
+    max-width: calc(33.333% - 11px) !important;
   }
 
-  /* 2컬럼 (col--6) 전용 너비 */
+  /* 2컬럼 (col--6) 전용 정밀 너비 */
   .theme-doc-markdown .col--6 {
-    width: 50% !important;
-    max-width: 50% !important;
-    flex: 0 0 50% !important;
+    width: calc(50% - 8px) !important;
+    flex: 0 0 calc(50% - 8px) !important;
+    max-width: calc(50% - 8px) !important;
   }
 
   /* 핵심 문서 영역 */
