@@ -548,6 +548,14 @@ async function injectCustomCSS() {
     // 미리보기 내부의 태그 종류 및 실제 HTML 소스 분석
     setTimeout(() => {
       const contentsEl = document.querySelector('.toastui-editor-contents');
+      
+      // 자바스크립트로 숨겨진 제목들을 강제로 노출 (인라인 스타일 제거)
+      contentsEl.querySelectorAll('h2, h3').forEach(el => {
+        el.style.setProperty('display', 'block', 'important');
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('visibility', 'visible', 'important');
+      });
+
       const tags = Array.from(contentsEl.querySelectorAll('*')).map(el => el.tagName.toLowerCase());
       const uniqueTags = [...new Set(tags)];
       
