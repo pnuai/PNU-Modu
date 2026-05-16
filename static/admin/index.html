@@ -345,6 +345,23 @@
   </div>
 </div>
 
+<!-- ──────────── LOCK ALERT MODAL ──────────── -->
+<div class="modal-overlay" id="modal-lock-alert" style="z-index:300">
+  <div class="modal" style="height:auto; max-width:480px; padding:40px; text-align:center; border-radius:32px">
+    <div style="font-size:3.5rem; margin-bottom:24px">🔒</div>
+    <h3 style="font-size:1.4rem; margin-bottom:12px; font-weight:800; color:var(--gray-900)">현재 다른 사용자가 편집 중입니다</h3>
+    <p style="color:var(--gray-500); font-size:0.95rem; line-height:1.6; margin-bottom:32px">
+      <strong id="lock-alert-user" style="color:var(--red); font-weight:700">@username</strong> 님이 이 문서를 편집하고 있습니다.<br>
+      내용 충돌을 방지하기 위해 <strong>읽기 전용</strong>으로 열거나,<br>편집 권한을 <strong>강제로</strong> 가져올 수 있습니다.
+    </p>
+    <div style="display:flex; flex-direction:column; gap:12px">
+      <button class="btn btn-primary btn-full" id="btn-lock-readonly" style="height:48px; font-size:1rem">읽기 전용으로 열기</button>
+      <button class="btn btn-danger btn-full" id="btn-lock-force" style="height:48px; font-size:1rem">강제로 편집 (기존 락 해제)</button>
+      <button class="btn btn-outline btn-full" onclick="closeLockAlert()" style="height:48px; font-size:1rem">취소</button>
+    </div>
+  </div>
+</div>
+
 <!-- ──────────── LIVE STUDIO MODAL ──────────── -->
 <div class="modal-overlay" id="modal-edit">
   <div class="modal">
@@ -416,6 +433,16 @@ const BRANCH = 'main';
 let TOKEN = '';
 let ME = null;
 let selectedFiles = [];
+
+const getCurUser = () => (ME ? ME.login : 'unknown');
+
+/* ─── Lock System ─── */
+const LOCK_DIR = '.locks';
+const HEARTBEAT_INTERVAL_MS = 300000; // 5min
+const STALE_THRESHOLD_MS = 900000;    // 15min
+let heartbeatTimer = null;
+let currentLock = null; // { docId, sha }
+let isReadOnly = false;
 
 /* ─── API helper ─── */
 const ghFetch = (path, { headers: extraHeaders = {}, ...restOpts } = {}) =>
@@ -501,7 +528,7 @@ function enterMain() {
   const navUser = document.getElementById('nav-user');
   navUser.style.display = 'flex';
   document.getElementById('nav-avatar').src = ME.avatar_url;
-  document.getElementById('nav-username').textContent = '@' + ME.login;
+  document.getElementById('nav-username').textContent = '@' + getCurUser();
 
   updateRepoUI();
 }
@@ -569,7 +596,11 @@ window.deleteFile = async (name, sha) => {
     const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/docs/${name}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: `docs: remove ${name}`, sha, branch: BRANCH }),
+      body: JSON.stringify({ 
+        message: `docs(delete): remove ${name} by @${getCurUser()}`, 
+        sha, 
+        branch: BRANCH 
+      }),
     });
     if (!r.ok) { const d = await r.json(); throw new Error(d.message); }
     appendLog(`✓ ${name} 삭제 완료`, 'ok');
@@ -667,6 +698,44 @@ window.openCreateModal = () => {
 let editTarget = null;
 async function openEditModal(name, sha) {
   initEditor();
+  
+  // Reset UI
+  isReadOnly = false;
+  toggleEditorReadOnly(false);
+
+  let docIdForLock = name.replace(/\.md$/, '');
+  
+  try {
+    // 1. Lock 확인
+    const lock = await checkLock(docIdForLock);
+    if (lock) {
+      const now = Math.floor(Date.now() / 1000);
+      if (now - lock.lastHeartbeat < STALE_THRESHOLD_MS / 1000) {
+        if (lock.editingBy !== getCurUser()) {
+          // 다른 사람이 편집 중 -> 모달 알림창 표시
+          showLockAlert(lock.editingBy, name, sha);
+          return; // 여기서 중단
+        } else {
+          // 본인이 편집 중 (브라우저 새로고침 등) -> 락 갱신
+          await acquireLock(docIdForLock, lock.sha);
+        }
+      } else {
+        // Stale Lock -> 자동 획득 시도
+        await acquireLock(docIdForLock, lock.sha);
+      }
+    } else {
+      // Lock 없음 -> 신규 획득
+      await acquireLock(docIdForLock);
+    }
+
+    await doOpenEditModal(name, sha);
+  } catch(e) {
+    alert(e.message);
+  }
+}
+
+/* 실제 모달을 열고 데이터를 채우는 핵심 로직 분리 */
+async function doOpenEditModal(name, sha) {
   try {
     const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/docs/${name}`);
     if (!r.ok) throw new Error('파일을 불러올 수 없습니다.');
@@ -703,7 +772,178 @@ async function openEditModal(name, sha) {
   }
 }
 
-function closeEditModal() { document.getElementById('modal-edit').style.display = 'none'; }
+async function closeEditModal() { 
+  if (currentLock && !isReadOnly) {
+    await releaseLock(currentLock.docId, currentLock.sha);
+  }
+  stopHeartbeat();
+  document.getElementById('modal-edit').style.display = 'none'; 
+}
+
+/* ─── Lock Logic ─── */
+async function checkLock(docId) {
+  try {
+    const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/${LOCK_DIR}/${docId}.lock.json`);
+    if (r.status === 404) return null;
+    const d = await r.json();
+    const content = JSON.parse(decodeURIComponent(escape(atob(d.content))));
+    return { ...content, sha: d.sha };
+  } catch (e) {
+    return null;
+  }
+}
+
+async function acquireLock(docId, existingSha = null) {
+  const now = Math.floor(Date.now() / 1000);
+  const lockData = {
+    docId,
+    editingBy: getCurUser(),
+    startedAt: now,
+    lastHeartbeat: now
+  };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(lockData, null, 2))));
+  
+  const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/${LOCK_DIR}/${docId}.lock.json`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: `system: acquire lock for ${docId} by @${getCurUser()} [skip ci]`,
+      content,
+      sha: existingSha,
+      branch: BRANCH
+    })
+  });
+
+  if (r.ok) {
+    const d = await r.json();
+    currentLock = { docId, sha: d.content.sha };
+    startHeartbeat();
+    return true;
+  }
+  return false;
+}
+
+async function releaseLock(docId, sha) {
+  if (!sha) return;
+  await ghFetch(`/repos/${ORG}/${REPO}/contents/${LOCK_DIR}/${docId}.lock.json`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: `system: release lock for ${docId} [skip ci]`,
+      sha,
+      branch: BRANCH
+    })
+  });
+  currentLock = null;
+}
+
+function startHeartbeat() {
+  stopHeartbeat();
+  heartbeatTimer = setInterval(async () => {
+    if (!currentLock) return;
+    const now = Math.floor(Date.now() / 1000);
+    const lockData = {
+      docId: currentLock.docId,
+      editingBy: getCurUser(),
+      lastHeartbeat: now
+    };
+    
+    // 1. 최신 락 상태 및 SHA 재조회 (Race Condition 방지)
+    const latest = await checkLock(currentLock.docId);
+    if (!latest || latest.editingBy !== getCurUser()) {
+      stopHeartbeat();
+      alert('락을 잃어버렸습니다. 다른 사용자가 편집을 시작했을 수 있습니다.');
+      isReadOnly = true;
+      toggleEditorReadOnly(true);
+      return;
+    }
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({
+      ...lockData,
+      startedAt: latest.startedAt // 최초 생성 시점 보존
+    }, null, 2))));
+
+    const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/${LOCK_DIR}/${currentLock.docId}.lock.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `system: heartbeat for ${currentLock.docId} [skip ci]`,
+        content,
+        sha: latest.sha,
+        branch: BRANCH
+      })
+    });
+    if (r.ok) {
+      const d = await r.json();
+      currentLock.sha = d.content.sha;
+    }
+  }, HEARTBEAT_INTERVAL_MS);
+}
+
+function stopHeartbeat() {
+  if (heartbeatTimer) clearInterval(heartbeatTimer);
+  heartbeatTimer = null;
+}
+
+function showLockAlert(username, name, sha) {
+  const modal = document.getElementById('modal-lock-alert');
+  document.getElementById('lock-alert-user').textContent = '@' + username;
+  
+  // 버튼 이벤트 바인딩 (한 번만 실행되도록 처리)
+  const btnReadonly = document.getElementById('btn-lock-readonly');
+  const btnForce = document.getElementById('btn-lock-force');
+  
+  const handleReadonly = async () => {
+    closeLockAlert();
+    isReadOnly = true;
+    toggleEditorReadOnly(true);
+    await doOpenEditModal(name, sha);
+  };
+  
+  const handleForce = async () => {
+    if (!confirm('정말로 편집 권한을 강제로 가져오시겠습니까?')) return;
+    closeLockAlert();
+    
+    const docId = name.replace(/\.md$/, '');
+    const lock = await checkLock(docId);
+    const success = await acquireLock(docId, lock ? lock.sha : null);
+    
+    if (success) {
+      isReadOnly = false;
+      toggleEditorReadOnly(false);
+      await doOpenEditModal(name, sha);
+    } else {
+      alert('이미 다른 사용자가 락 상태를 변경했습니다. 새로고침 후 다시 시도해주세요.');
+    }
+  };
+
+  btnReadonly.onclick = handleReadonly;
+  btnForce.onclick = handleForce;
+  
+  modal.style.display = 'flex';
+}
+
+function closeLockAlert() {
+  document.getElementById('modal-lock-alert').style.display = 'none';
+}
+
+function toggleEditorReadOnly(readOnly) {
+  isReadOnly = readOnly;
+  document.getElementById('btn-save-edit').disabled = readOnly;
+  document.getElementById('edit-title').disabled = readOnly;
+  document.getElementById('edit-pos').disabled = readOnly;
+  document.getElementById('edit-id').disabled = readOnly;
+  document.getElementById('edit-theme').disabled = readOnly;
+  // Toast Editor readOnly is tricky, we can use CSS to disable pointer events or its API
+  const editorEl = document.querySelector('#toast-editor');
+  if (readOnly) {
+    editorEl.style.pointerEvents = 'none';
+    editorEl.style.opacity = '0.7';
+  } else {
+    editorEl.style.pointerEvents = 'auto';
+    editorEl.style.opacity = '1';
+  }
+}
 
 window.saveEdit = async () => {
   if (!editTarget) return;
@@ -733,13 +973,30 @@ window.saveEdit = async () => {
     if (!id) { alert('ID를 입력해주세요 (예: intro). 파일 생성에 필요합니다.'); btn.disabled=false; btn.innerHTML='저장 및 배포'; return; }
     const prefix = pos ? String(pos).padStart(2,'0') + '-' : '';
     targetName = prefix + id + '.md';
+    
+    // 신규 파일인 경우 저장 직전 락 확인
+    const docId = targetName.replace(/\.md$/, '');
+    const lock = await checkLock(docId);
+    if (lock && lock.editingBy !== getCurUser()) {
+      const now = Math.floor(Date.now() / 1000);
+      if (now - lock.lastHeartbeat < STALE_THRESHOLD_MS / 1000) {
+        alert(`현재 @${lock.editingBy} 님이 동일한 ID로 작업 중입니다. 다른 ID를 사용해주세요.`);
+        btn.disabled = false; btn.innerHTML = '저장 및 배포';
+        return;
+      }
+    }
   }
   
   try {
+    const isNew = !editTarget.sha;
+    const msg = isNew 
+      ? `feat(docs): create ${targetName} by @${getCurUser()}`
+      : `docs(edit): update ${targetName} by @${getCurUser()}`;
+
     const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/docs/${targetName}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: `docs: update ${targetName} via Web Editor`, content, sha: editTarget.sha, branch: BRANCH }),
+      body: JSON.stringify({ message: msg, content, sha: editTarget.sha, branch: BRANCH }),
     });
     if (!r.ok) { const d = await r.json(); throw new Error(d.message); }
     closeEditModal();
@@ -935,7 +1192,11 @@ document.getElementById('btn-upload').addEventListener('click', async () => {
       const check = await ghFetch(`/repos/${ORG}/${REPO}/contents/docs/${file.name}`);
       if (check.ok) { const d = await check.json(); sha = d.sha; }
 
-      const body = { message: `docs: upload ${file.name} (by @${ME.login})`, content, branch: BRANCH };
+      const body = { 
+        message: `${sha ? 'docs(edit): update' : 'feat(docs): create'} ${file.name} by @${getCurUser()}`, 
+        content, 
+        branch: BRANCH 
+      };
       if (sha) body.sha = sha;
 
       const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/docs/${file.name}`, {
@@ -982,6 +1243,15 @@ function toBase64(file) {
     r.readAsDataURL(file);
   });
 }
+
+/* ─── Graceful Unload ─── */
+window.addEventListener('beforeunload', (e) => {
+  if (currentLock && !isReadOnly) {
+    // best-effort cleanup: beforeunload network requests are not guaranteed by browsers.
+    // Heartbeat + stale timeout remains the primary recovery mechanism.
+    releaseLock(currentLock.docId, currentLock.sha);
+  }
+});
 </script>
 </body>
 </html>
