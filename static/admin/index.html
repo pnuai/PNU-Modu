@@ -166,7 +166,6 @@
 </nav>
 
 <!-- ──────────── LOGIN SCREEN ──────────── -->
-    <div id="debug-status" style="position:fixed; bottom:10px; left:10px; background:rgba(0,0,0,0.8); color:white; padding:5px 10px; border-radius:5px; font-size:10px; z-index:9999; font-family:monospace;">CSS 상태 확인 중...</div>
     <div id="screen-login">
   <div class="login-card">
     <div class="login-icon">🔐</div>
@@ -532,48 +531,25 @@ async function injectCustomCSS() {
       }
     }
 
-    if (!css) {
-      document.getElementById('debug-status').innerText = "❌ CSS 로딩 실패 (GitHub/Local 모두 실패)";
-      return;
-    }
-    document.getElementById('debug-status').innerText = `✅ CSS 로딩 성공 (${css.length}자)`;
+    
+    if (!css) return;
     
     // Docusaurus 본문 클래스를 Toast UI 미리보기 클래스로 치환
     css = css.replace(/\.theme-doc-markdown/g, '.toastui-editor-contents');
     css = css.replace(/\.markdown/g, '.toastui-editor-contents');
     
-    // 제목이 투명해지거나 사라지는 현상을 원천 차단하는 강제 스타일 주입
-    css += `\n.toastui-editor-contents h1, .toastui-editor-contents h2, .toastui-editor-contents h3 { border: 3px solid red !important; background: yellow !important; color: black !important; display: block !important; visibility: visible !important; opacity: 1 !important; min-height: 50px !important; }`;
-    
-    // 제목(h2, h3) 실시간 강제 노출 엔진 (MutationObserver)
+    // 제목(h2, h3) 가시성 보장 로직 (목차 스크립트에 의한 사라짐 방지)
     const observer = new MutationObserver(() => {
       const contentsEl = document.querySelector('.toastui-editor-contents');
       if (!contentsEl) return;
-      
       contentsEl.querySelectorAll('h2, h3').forEach(el => {
         el.style.setProperty('display', 'block', 'important');
         el.style.setProperty('opacity', '1', 'important');
         el.style.setProperty('visibility', 'visible', 'important');
-        el.style.setProperty('color', 'white', 'important');
-        el.style.setProperty('background', 'purple', 'important');
-        el.style.setProperty('border', '5px solid black', 'important');
-        el.style.setProperty('min-height', '60px', 'important');
       });
     });
-
     const target = document.querySelector('.toastui-editor-contents');
-    if (target) {
-      observer.observe(target, { childList: true, subtree: true });
-    }
-
-    // 미리보기 내부의 태그 종류 및 실제 HTML 소스 분석
-    setTimeout(() => {
-      const contentsEl = document.querySelector('.toastui-editor-contents');
-      const tags = Array.from(contentsEl.querySelectorAll('*')).map(el => el.tagName.toLowerCase());
-      const uniqueTags = [...new Set(tags)];
-      const rawHTML = contentsEl.innerHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;').substring(0, 300);
-      document.getElementById('debug-status').innerText += ` | 태그: ${uniqueTags.join(', ')} | 소스: ${rawHTML}...`;
-    }, 500);
+    if (target) observer.observe(target, { childList: true, subtree: true });
 
     const style = document.createElement('style');
     style.id = 'injected-custom-css';
