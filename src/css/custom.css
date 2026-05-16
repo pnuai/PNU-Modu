@@ -744,94 +744,149 @@ main .col--3 {
 }
 
 /* =========================================
-   PDF / Print System (Final)
-   (웹페이지가 아닌 '브로슈어 문서' 출력 최적화)
+   PNU Slate PDF / Print System (Standard A4)
+   (웹페이지 캡처가 아닌 '실제 문서 출력' 전문 시스템)
    ========================================= */
 
 @media print {
-  /* 1. 페이지 규격 설정 (A4 Portrait 고정) */
+  /* 페이지 기본 설정 (A4 Portrait 표준) */
   @page {
-    size: A4;
-    margin: 0;
+    size: A4 portrait;
+    margin: 12mm;
   }
 
-  /* 2. 웹 UI 요소 제거 (순수 문서만 남김) */
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    background: white !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 불필요한 웹 UI 요소 완전 제거 */
   .navbar,
-  .footer,
-  aside.theme-doc-sidebar-container,
-  .theme-doc-toc-desktop,
+  .theme-doc-sidebar-container,
+  .table-of-contents,
   .pagination-nav,
   .theme-back-to-top-button,
   .breadcrumbs,
+  footer,
+  .footer,
+  .print-button,
+  .admin-controls,
   .theme-edit-this-page,
   .theme-last-updated,
-  button,
   nav,
-  .table-of-contents {
+  button {
     display: none !important;
   }
 
-  /* 3. 레이아웃 리셋 (웹용 여백 및 배경 제거) */
-  body {
-    background: white !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .main-wrapper {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: white !important;
-  }
-
-  .container {
-    max-width: 100% !important;
+  /* 모든 레이아웃 컨테이너 강제 확장 (중앙 정렬 및 여백 제거) */
+  .main-wrapper,
+  main,
+  .container,
+  .row,
+  .col,
+  div[class*="docItemCol_"],
+  div[class*="docItemContainer_"] {
     width: 100% !important;
-    padding: 0 !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
     margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 
-  /* 4. 브로슈어 본문 영역 (A4 정밀 규격 적용) */
+  /* 핵심 문서 영역 (종이 전체 너비 활용) */
   .theme-doc-markdown {
-    width: 210mm !important;
-    max-width: 210mm !important;
-    min-width: 210mm !important;
-    margin: 0 auto !important;
-    padding: 20mm !important; /* 문서 상하좌우 여백 */
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: white !important;
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
+    display: block !important;
   }
 
-  /* 5. 페이지 분할 방지 (중요 요소 보호) */
-  h1, h2, h3, h4,
-  blockquote,
-  table,
-  img,
-  pre,
-  .brochureHero,
-  li {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
+  /* 인쇄용 고품격 타이포그래피 (pt 단위 사용) */
+  .theme-doc-markdown h1 {
+    font-size: 28pt !important;
+    margin-top: 0 !important;
+    margin-bottom: 20pt !important;
+    color: #0a2463 !important;
   }
 
-  /* 제목 바로 뒤에서 페이지가 넘어가는 현상 방지 */
-  h1, h2, h3 {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+  .theme-doc-markdown h2 {
+    font-size: 20pt !important;
+    margin-top: 24pt !important;
+    margin-bottom: 12pt !important;
+    color: #0a2463 !important;
+    border-left: 5px solid #f59e0b !important;
+    padding-left: 10pt !important;
+    break-after: avoid-page;
+    page-break-after: avoid;
+    display: block !important;
   }
 
-  /* 6. 타이포그래피 미세 조정 (인쇄용) */
+  .theme-doc-markdown h3 {
+    font-size: 16pt !important;
+    margin-top: 18pt !important;
+    margin-bottom: 10pt !important;
+    color: #1e3a8a !important;
+    break-after: avoid-page;
+    page-break-after: avoid;
+    display: block !important;
+  }
+
   .markdown p,
   .theme-doc-markdown p,
   .markdown li,
   .theme-doc-markdown li {
+    font-size: 11pt !important;
+    line-height: 1.7 !important;
     color: #111 !important;
-    font-size: 11pt !important; /* 인쇄 표준 크기 */
-    line-height: 1.6 !important;
+    margin-bottom: 10pt !important;
   }
 
-  .markdown h1, .theme-doc-markdown h1 { color: #0a2463 !important; }
-  .markdown h2, .theme-doc-markdown h2 { color: #0a2463 !important; border-left-color: #f59e0b !important; }
+  /* 페이지 중간 잘림 방지 (핵심 요소 보호) */
+  h1, h2, h3, h4,
+  blockquote,
+  table,
+  pre,
+  img,
+  .brochureHero,
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* 이미지 최적화 */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+  }
+
+  /* 코드 블록 (잘림 방지 및 자동 줄바꿈) */
+  pre {
+    overflow: hidden !important;
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 10pt !important;
+    background: #f8fafc !important;
+  }
+
+  /* 링크 URL 자동 출력 제거 */
+  a::after {
+    content: "" !important;
+  }
 }
