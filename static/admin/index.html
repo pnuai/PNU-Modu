@@ -538,18 +538,27 @@ async function injectCustomCSS() {
     css = css.replace(/\.theme-doc-markdown/g, '.toastui-editor-contents');
     css = css.replace(/\.markdown/g, '.toastui-editor-contents');
     
-    // 제목(h2, h3) 가시성 보장 로직 (목차 스크립트에 의한 사라짐 방지)
-    const observer = new MutationObserver(() => {
-      const contentsEl = document.querySelector('.toastui-editor-contents');
-      if (!contentsEl) return;
-      contentsEl.querySelectorAll('h2, h3').forEach(el => {
+    // 제목(h2, h3) 가시성 보장 로직 (절대 꺼지지 않는 감시망)
+    const forceShowHeadings = () => {
+      const previewEl = document.querySelector('.toastui-editor-contents');
+      if (!previewEl) return;
+      previewEl.querySelectorAll('h2, h3').forEach(el => {
         el.style.setProperty('display', 'block', 'important');
         el.style.setProperty('opacity', '1', 'important');
         el.style.setProperty('visibility', 'visible', 'important');
+        el.style.setProperty('height', 'auto', 'important');
+        el.style.setProperty('margin-top', '40px', 'important');
       });
-    });
-    const target = document.querySelector('.toastui-editor-contents');
-    if (target) observer.observe(target, { childList: true, subtree: true });
+    };
+
+    // 에디터 컨테이너 자체를 감시하여 미리보기가 갱신될 때마다 실행
+    const observer = new MutationObserver(forceShowHeadings);
+    const editorContainer = document.querySelector('#toast-editor');
+    if (editorContainer) {
+      observer.observe(editorContainer, { childList: true, subtree: true });
+    }
+    // 즉시 한 번 실행
+    setTimeout(forceShowHeadings, 1000);
 
     const style = document.createElement('style');
     style.id = 'injected-custom-css';
