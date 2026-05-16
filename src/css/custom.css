@@ -748,17 +748,7 @@ main .col--3 {
   transform: rotate(15deg) scale(1.1);
 }
 
-/* 마크다운 기본 헤딩 숨기기 (TOC 스크롤 인식 및 앵커 이동을 완벽하게 지원하는 방식) */
-.theme-doc-markdown > h2,
-.theme-doc-markdown > h3 {
-  opacity: 0;
-  color: transparent;
-  height: 50px;
-  margin-top: -50px; /* 레이아웃 상에서 차지하는 공간을 0으로 만듦 */
-  margin-bottom: 0;
-  padding: 0;
-  border: none;
-  pointer-events: none;
-  z-index: -1;
-  position: relative;
+/* 목차(TOC) 클릭 시 헤더에 가려지지 않도록 스크롤 위치 보정 (표준 방식) */
+h2, h3, h4 {
+  scroll-margin-top: 100px;
 }
