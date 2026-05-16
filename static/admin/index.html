@@ -145,6 +145,19 @@
   #toast-editor{flex:1;min-height:0;margin-bottom:20px;border-radius:12px;overflow:hidden;border:1px solid var(--gray-200)}
   .toastui-editor-defaultUI{border:none !important;height:100% !important}
 
+  /* 진단용: 미리보기 내부의 모든 제목을 강제로 노출 */
+  .toastui-editor-contents h1, 
+  .toastui-editor-contents h2, 
+  .toastui-editor-contents h3 {
+    border: 2px solid red !important;
+    color: black !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    min-height: 20px !important;
+    background: yellow !important; /* 노란 배경으로 눈에 확 띄게 */
+  }
+
   /* SPINNER */
   .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -517,7 +530,8 @@ function updateMDXPreviewStyles() {
 /* 실제 홈페이지의 디자인(custom.css)을 미리보기 화면에 완벽하게 적용하는 함수 */
 async function injectCustomCSS() {
   try {
-    const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/src/css/custom.css`);
+    // 캐시 방지를 위해 타임스탬프 추가
+    const r = await ghFetch(`/repos/${ORG}/${REPO}/contents/src/css/custom.css?t=${Date.now()}`);
     if (!r.ok) return;
     const d = await r.json();
     let css = decodeURIComponent(escape(atob(d.content)));
