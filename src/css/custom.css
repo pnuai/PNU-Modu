@@ -850,9 +850,8 @@ main .col--3 {
   display: block !important;
 }
 
-/* 앵커 및 가상 요소 완전 박멸 */
-.hash-link, 
-.anchor {
+/* 앵커 제거 (Docusaurus 본문 내에서만 앵커 링크 숨김, ToastUI의 .anchor는 건드리지 않음) */
+.theme-doc-markdown .hash-link {
   display: none !important;
 }
 
