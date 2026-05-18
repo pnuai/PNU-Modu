@@ -73,6 +73,10 @@ const config = {
       {
         docs: {
           sidebarPath: "./sidebars.js",
+          remarkPlugins: [
+            require('remark-directive'),
+            require('./src/theme/remarkBrochureDirectives'),
+          ],
 
           editUrl: ({versionDocsDirPath, docPath}) => {
             // Docusaurus 빌드 경고(Broken Link) 방지를 위해 절대 경로로 반환

@@ -66,6 +66,14 @@ const chapters =
     "sidebar_position": 8
   },
   {
+    "id": "custom-brochure",
+    "title": "AI융합교육원 브로슈어",
+    "description": "",
+    "theme": "public-blue",
+    "link": "/docs/custom-brochure",
+    "sidebar_position": 9
+  },
+  {
     "id": "template",
     "title": "템플릿 및 컴포넌트 가이드",
     "description": "",

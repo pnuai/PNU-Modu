@@ -1,0 +1,442 @@
+/* ============================================================
+   PNU Slate Brochure Blocks — Premium Visual Architecture
+   Theme-aware CSS styles for 6 Premium Block Components
+   ============================================================ */
+
+/* Common styling utility */
+.bb-section {
+  padding: 80px 48px;
+  border-radius: var(--theme-radius, 12px);
+  margin-bottom: 40px;
+  font-family: var(--theme-font-family);
+  background-color: var(--theme-background);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .bb-section {
+    padding: 48px 24px;
+  }
+}
+
+/* =========================================
+   1. HERO SECTION
+   ========================================= */
+.bb-hero {
+  background: var(--theme-hero-bg);
+  color: #ffffff;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--theme-border);
+}
+
+.bb-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.bb-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--theme-primary-light);
+  padding: 6px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--theme-radius);
+  margin-bottom: 24px;
+}
+
+.bb-hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  color: #ffffff !important;
+  margin-bottom: 24px !important;
+  word-break: keep-all;
+}
+
+.bb-hero-desc {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8) !important;
+  margin-bottom: 32px !important;
+  word-break: keep-all;
+}
+
+/* Floating Deco Circles */
+.bb-hero-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bb-hero-deco span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+}
+
+.bb-hero-deco span:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+  background: var(--theme-primary-light);
+}
+
+.bb-hero-deco span:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  bottom: -50px;
+  left: -50px;
+  background: var(--theme-accent);
+}
+
+/* minimal-light: hero는 밝은 배경이므로 텍스트를 어두운 색으로 오버라이드 */
+[data-brochure-theme="minimal-light"] .bb-hero {
+  color: var(--theme-primary);
+}
+[data-brochure-theme="minimal-light"] .bb-hero-title {
+  color: var(--theme-primary) !important;
+}
+[data-brochure-theme="minimal-light"] .bb-hero-desc {
+  color: var(--theme-primary-mid) !important;
+}
+[data-brochure-theme="minimal-light"] .bb-hero-badge {
+  color: var(--theme-primary-mid) !important;
+  border-color: var(--theme-border);
+  background: var(--theme-background);
+}
+
+/* =========================================
+   2. STATS SECTION
+   ========================================= */
+.bb-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.bb-stat-card {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-card);
+  padding: 32px 24px;
+  box-shadow: var(--theme-shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bb-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--theme-shadow);
+}
+
+.bb-stat-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--theme-primary-mid);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.bb-stat-value {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 900;
+  color: var(--theme-primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.bb-stat-sub {
+  font-size: 12.5px;
+  color: var(--theme-primary-light);
+  margin-top: 8px;
+}
+
+/* =========================================
+   3. CARDS SECTION
+   ========================================= */
+.bb-cards-grid {
+  display: grid;
+  gap: 28px;
+  margin-top: 32px;
+}
+
+.bb-cards-grid.cols-1 { grid-template-columns: 1fr; }
+.bb-cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.bb-cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.bb-cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 980px) {
+  .bb-cards-grid.cols-3, .bb-cards-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .bb-cards-grid { grid-template-columns: 1fr !important; }
+}
+
+.bb-card {
+  background: var(--theme-card-bg);
+  border: var(--theme-border-card, 1px solid var(--theme-border));
+  border-radius: var(--theme-radius-card);
+  padding: 36px 28px;
+  box-shadow: var(--theme-shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card variants */
+.bb-card.variant-elevated:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--theme-shadow);
+}
+
+.bb-card.variant-accent {
+  border-top: 4px solid var(--theme-accent);
+}
+
+.bb-card.variant-outlined {
+  border: 2px solid var(--theme-primary-mid);
+  box-shadow: none;
+}
+
+.bb-card-icon {
+  font-size: 28px;
+  margin-bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(2, 107, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-primary-mid);
+}
+
+.bb-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--theme-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.bb-card-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--theme-primary-mid);
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* =========================================
+   4. TIMELINE SECTION
+   ========================================= */
+.bb-timeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 40px;
+  position: relative;
+}
+
+.bb-timeline-flow::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--theme-border);
+}
+
+.bb-timeline-step {
+  display: flex;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.bb-timeline-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--theme-card-bg);
+  border: 2px solid var(--theme-primary-mid);
+  box-shadow: var(--theme-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--theme-primary);
+  flex-shrink: 0;
+}
+
+.bb-timeline-step.accent-step .bb-timeline-badge {
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+}
+
+.bb-timeline-body {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-card);
+  padding: 24px 28px;
+  box-shadow: var(--theme-shadow-card);
+  flex: 1;
+}
+
+.bb-timeline-phase {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--theme-primary-light);
+  margin-bottom: 4px;
+}
+
+.bb-timeline-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--theme-primary);
+  margin-bottom: 12px;
+}
+
+.bb-timeline-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--theme-primary-mid);
+  margin: 0;
+}
+
+/* =========================================
+   5. QUOTE SECTION
+   ========================================= */
+.bb-quote {
+  background: var(--theme-card-bg);
+  border-left: 5px solid var(--theme-primary-mid);
+  border-radius: var(--theme-radius);
+  padding: 40px;
+  box-shadow: var(--theme-shadow-card);
+  position: relative;
+}
+
+.bb-quote.accent-quote {
+  border-left-color: var(--theme-accent);
+}
+
+.bb-quote-icon {
+  font-size: 40px;
+  color: var(--theme-primary-light);
+  opacity: 0.3;
+  line-height: 1;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.bb-quote-text {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--theme-primary);
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+  word-break: keep-all;
+}
+
+.bb-quote-author {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-quote-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--theme-primary);
+}
+
+.bb-quote-role {
+  font-size: 12.5px;
+  color: var(--theme-primary-light);
+}
+
+/* =========================================
+   6. CTA SECTION
+   ========================================= */
+.bb-cta {
+  background: var(--theme-gradient-primary);
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+  border-radius: var(--theme-radius);
+}
+
+.bb-cta-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: #ffffff !important;
+  margin-bottom: 16px !important;
+  line-height: 1.25;
+}
+
+.bb-cta-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85) !important;
+  max-width: 600px;
+  margin-bottom: 32px !important;
+}
+
+.bb-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--theme-primary);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 28px;
+  border-radius: 9999px;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bb-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  color: var(--theme-primary);
+}
+
+.bb-cta-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.bb-cta-btn:hover svg {
+  transform: translateX(4px);
+}

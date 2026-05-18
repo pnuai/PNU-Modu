@@ -4,8 +4,11 @@ import { MDXProvider } from '@mdx-js/react';
 import MDXComponents from '@theme/MDXComponents';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkDirective from 'remark-directive';
+import remarkBrochureDirectives from '../theme/remarkBrochureDirectives';
 import rehypeRaw from 'rehype-raw';
 import Head from '@docusaurus/Head';
+import { ThemeProvider } from '../components/BrochureBlocks/ThemeContext';
 
 // MDX 전처리 함수: JSX style object를 표준 HTML style string으로 변환하고, style 태그 정화
 function preprocessMDX(rawContent) {
@@ -453,24 +456,27 @@ export default function PreviewPage() {
           <div className="preview-container">
             <main className="preview-main">
               <article className="theme-doc-markdown">
-                <MDXProvider components={componentMap}>
-                  <ReactMarkdown 
-                    key={content}
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[
-                      [rehypeRaw, { 
-                        tagNames: [
-                          'div', 'span', 'style', 'section', 'article', 
-                          'highlight', 'text', 'columns', 'col', 'column', 'callout', 'herobutton'
-                        ] 
-                      }],
-                      rehypeInjectLines
-                    ]}
-                    components={componentMap}
-                  >
-                    {content}
-                  </ReactMarkdown>
-                </MDXProvider>
+                <ThemeProvider initialTheme={theme}>
+                  <MDXProvider components={componentMap}>
+                    <ReactMarkdown 
+                      key={content}
+                      remarkPlugins={[remarkGfm, remarkDirective, remarkBrochureDirectives]}
+                      rehypePlugins={[
+                        [rehypeRaw, { 
+                          tagNames: [
+                            'div', 'span', 'style', 'section', 'article', 
+                            'highlight', 'text', 'columns', 'col', 'column', 'callout', 'herobutton',
+                            'hero', 'stats', 'cards', 'timeline', 'quote', 'cta'
+                          ] 
+                        }],
+                        rehypeInjectLines
+                      ]}
+                      components={componentMap}
+                    >
+                      {content}
+                    </ReactMarkdown>
+                  </MDXProvider>
+                </ThemeProvider>
               </article>
             </main>
           </div>
