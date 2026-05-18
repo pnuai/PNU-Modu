@@ -1,9 +1,9 @@
 ---
 id: part-2
-title: "교육목표 및 혁신노력"
-sidebar_position: 2
+title: 교육목표 및 혁신노력
+sidebar_position: 1
+theme: blue
 ---
-
 <style>{`
   :root {
     --navy: #0a1f44;
