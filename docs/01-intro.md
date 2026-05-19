@@ -1,9 +1,10 @@
-﻿---
+---
 id: intro
 title: 대학 소개 및 운영 방향
 sidebar_position: 1
 nav_label: 사업소개
 theme: public-blue
+hide_title: true
 ---
 
 :::hero

@@ -4,6 +4,7 @@ title: 브로슈어 블록 작성 가이드 — 전체 디렉티브 참조서
 sidebar_position: 99
 nav_label: 템플릿
 theme: public-blue
+hide_title: true
 ---
 
 :::hero

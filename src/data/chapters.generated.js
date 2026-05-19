@@ -37,7 +37,7 @@ const chapters =
     "id": "part-5",
     "title": "SW전공교육 강화",
     "description": "",
-    "theme": "gray",
+    "theme": "public-blue",
     "link": "/docs/part-5",
     "sidebar_position": 5
   },
@@ -45,7 +45,7 @@ const chapters =
     "id": "part-6",
     "title": "AI·SW융합교육 및 비전공자 전문교육 확대",
     "description": "",
-    "theme": "gray",
+    "theme": "public-blue",
     "link": "/docs/part-6",
     "sidebar_position": 6
   },
@@ -53,7 +53,7 @@ const chapters =
     "id": "part-7",
     "title": "성과확산 및 인재기반 조성",
     "description": "",
-    "theme": "gray",
+    "theme": "public-blue",
     "link": "/docs/part-7",
     "sidebar_position": 7
   },
@@ -61,17 +61,9 @@ const chapters =
     "id": "part-8",
     "title": "대학 일반 현황",
     "description": "",
-    "theme": "blue",
+    "theme": "public-blue",
     "link": "/docs/part-8",
     "sidebar_position": 8
-  },
-  {
-    "id": "custom-brochure",
-    "title": "AI융합교육원 브로슈어",
-    "description": "",
-    "theme": "public-blue",
-    "link": "/docs/custom-brochure",
-    "sidebar_position": 9
   },
   {
     "id": "template",
