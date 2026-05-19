@@ -3,7 +3,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Docusaurus](https://img.shields.io/badge/Docusaurus-3.10.1-green.svg)](https://docusaurus.io/)
-[![React](https://img.shields.io/badge/React-19.0.0-blue.svg)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-18.0.0-blue.svg)](https://react.dev/)
 
 > **서비스 링크: [https://pnuai.github.io](https://pnuai.github.io)**
 >
