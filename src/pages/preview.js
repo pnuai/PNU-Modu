@@ -462,13 +462,15 @@ export default function PreviewPage() {
                       key={content}
                       remarkPlugins={[remarkGfm, remarkDirective, remarkBrochureDirectives]}
                       rehypePlugins={[
-                        [rehypeRaw, { 
+                        [rehypeRaw, {
                           tagNames: [
-                            'div', 'span', 'style', 'section', 'article', 
+                            'div', 'span', 'style', 'section', 'article',
                             'highlight', 'text', 'columns', 'col', 'column', 'callout', 'herobutton',
                             'hero', 'stats', 'cards', 'timeline', 'quote', 'cta',
-                            'chapters', 'roadmap', 'badges'
-                          ] 
+                            'chapters', 'roadmap', 'badges',
+                            'kpi', 'strategy', 'alphagrid', 'panel', 'stepper', 'split',
+                            'chapterheader', 'ChapterHeader'
+                          ]
                         }],
                         rehypeInjectLines
                       ]}

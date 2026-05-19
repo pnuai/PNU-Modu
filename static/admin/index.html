@@ -966,7 +966,7 @@ function syncToPreview() {
   }
   
   const content = toastEditor.getMarkdown();
-  const theme = document.getElementById('edit-theme')?.value || 'blue';
+  const theme = document.getElementById('edit-theme')?.value || 'public-blue';
   const layout = localStorage.getItem("brochure-layout") || 'standard';
   const frame = document.getElementById('preview-frame');
   if (frame && frame.contentWindow) {
@@ -1216,22 +1216,22 @@ async function doOpenEditModal(name, sha) {
     const d = await r.json();
     const text = decodeURIComponent(escape(atob(d.content)));
     
-    let id='', title='', pos='', theme='blue';
+    let id='', title='', pos='', theme='public-blue', navLabel='';
     const match = text.match(/^---\s*([\s\S]*?)---\s*/);
     let stripped = text;
     if (match) {
       stripped = text.substring(match[0].length);
       const fm = match[1];
       const getVal = key => { const m = fm.match(new RegExp(`^${key}:\\s*(.*)$`, 'm')); return m ? m[1].replace(/^["']|["']$/g, '').trim() : ''; };
-      id = getVal('id'); title = getVal('title'); pos = getVal('sidebar_position'); theme = getVal('theme') || 'blue';
+      id = getVal('id'); title = getVal('title'); pos = getVal('sidebar_position'); theme = getVal('theme') || 'public-blue'; navLabel = getVal('nav_label');
     }
 
-    editTarget = { name, sha: d.sha, text: stripped };
+    editTarget = { name, sha: d.sha, text: stripped, navLabel };
     document.getElementById('modal-filename').textContent = name + ' 수정';
     document.getElementById('edit-title').value = title;
     document.getElementById('edit-pos').value = pos;
     document.getElementById('edit-id').value = id;
-    
+
     const th = document.getElementById('edit-theme');
     if(!th.options.length) th.innerHTML = THEMES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
     th.value = theme;
@@ -1431,17 +1431,19 @@ window.saveEdit = async () => {
   const title = document.getElementById('edit-title').value.trim();
   const pos = document.getElementById('edit-pos').value.trim();
   const theme = document.getElementById('edit-theme').value;
-  
+  const navLabel = editTarget?.navLabel || '';
+
   const frontmatter = [
     '---',
     id ? `id: ${id}` : null,
     title ? `title: ${title}` : null,
+    navLabel ? `nav_label: ${navLabel}` : null,
     pos ? `sidebar_position: ${pos}` : null,
     theme ? `theme: ${theme}` : null,
     '---',
     ''
   ].filter(l => l !== null).join('\n');
-  
+
   const finalText = frontmatter + toastEditor.getMarkdown();
   const content = btoa(unescape(encodeURIComponent(finalText)));
   
@@ -1537,11 +1539,9 @@ function addFiles(newFiles) {
 }
 
 const THEMES = [
-  { value:'blue',   label:'파랑', color:'#2563eb' },
-  { value:'green',  label:'초록', color:'#16a34a' },
-  { value:'purple', label:'보라', color:'#7c3aed' },
-  { value:'orange', label:'주황', color:'#ea580c' },
-  { value:'gray',   label:'회색', color:'#6b7280' },
+  { value:'public-blue',       label:'공공 블루 (기본)', color:'#1757c2' },
+  { value:'startup-gradient',  label:'스타트업 다크',    color:'#6366f1' },
+  { value:'minimal-light',     label:'미니멀 라이트',    color:'#18181b' },
 ];
 
 function renderFileList() {
