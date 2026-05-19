@@ -924,34 +924,88 @@ theme: public-blue
 
 ## AI에게 새 챕터 작성 요청할 때 프롬프트
 
+아래 프롬프트를 복사해서 텍스트 자료와 함께 AI에게 붙여넣으세요.
+
 ```
-아래 텍스트 자료를 바탕으로 Docusaurus md 파일을 작성해줘.
+아래 텍스트 자료를 바탕으로 Docusaurus MDX 파일을 작성해줘.
+코드블록 없이 파일 내용 그대로 출력해줘 (마크다운 코드펜스로 감싸지 말 것).
 
-규칙:
-1. 반드시 ::: 디렉티브 문법만 사용 (99-template.md 참고)
-2. JSX, HTML 코드는 절대 쓰지 말 것
-3. 파일 맨 위에 frontmatter(id, title, sidebar_position, nav_label, theme: public-blue) 넣을 것
-4. hero 블록을 가장 먼저 배치하고, 그 다음 kpi → panel/cards/stepper 순으로 배치
-5. 내용을 빠짐없이 다 담을 것
+## 필수 규칙
+
+1. 반드시 ::: 디렉티브 문법만 사용할 것
+2. JSX, HTML 태그(<div> 등)는 절대 쓰지 말 것
+3. 파일 맨 위 frontmatter 형식:
+   ---
+   id: part-N
+   title: 챕터 제목
+   sidebar_position: N
+   nav_label: 탭에 짧게 표시될 이름 (6자 이내)
+   theme: public-blue
+   description: 한 줄 요약 (홈 목차 카드에 표시됨)
+   ---
+4. 블록 배치 순서: hero → kpi(숫자 있을 때) → quote(인용문 있을 때) → panel/cards/stepper → strategy/timeline → cta
+5. 내용을 빠짐없이 담을 것. 생략하거나 요약하지 말 것
 6. 숫자 특수기호(①②③)는 반드시 따옴표로 감쌀 것: "①"
-7. 큰따옴표나 꺾쇠(<>)는 속성값 안에 절대 쓰지 말 것
+7. 속성값 안에 큰따옴표("), 꺾쇠(<>), 콜론(:) 넣지 말 것
+8. 각 ::: 블록 사이에 빈 줄을 한 줄 넣을 것
 
-사용 가능한 블록:
-- hero: 상단 히어로 배너 (필수, 1개)
-- kpi: 핵심 숫자 지표 가로 나열
-- stats: 통계 카드 그리드
-- cards: 아이콘+제목+설명 카드
-- panel: 아이콘+제목+목록/설명 패널 (가장 많이 쓰임)
-- stepper: 단계별 프로세스 가로 나열
-- timeline: 순서형 타임라인 세로 나열
-- strategy: 알파벳 레터+전략 카드 (어두운 배경)
-- alphagrid: 알파벳 뱃지+설명 그리드
-- roadmap: 단계별 로드맵 트랙
-- badges: 컬러 뱃지 모음
-- chapters: 챕터 목차 카드
-- quote: 인용문 블록
-- cta: 행동 유도 버튼
-- split: 좌우 분할 패널 (left:/right: 섹션 필수)
+## 블록 선택 기준
+
+| 내용 유형 | 사용할 블록 |
+|---|---|
+| 페이지 상단 제목+설명 | hero (필수 1개) |
+| 숫자·퍼센트·통계 3~5개 나열 | kpi |
+| 숫자 통계를 카드 형태로 | stats |
+| 아이콘+짧은 설명 항목 여러 개 | cards |
+| 조직·부서·트랙 구조 나열 | panel (items: 사용) |
+| 특징·장점을 설명 문장으로 | panel (desc: 사용) |
+| PDCA·절차·단계 가로 나열 | stepper |
+| 연도별·순서별 세로 나열 | timeline |
+| 비전·전략 프레임워크 (S·M·A·R·T 등) | strategy |
+| 약어 모델·인재상 알파벳 뱃지 | alphagrid |
+| 중장기 로드맵 트랙 | roadmap |
+| 역량 키워드 뱃지 모음 | badges |
+| 목차·과목 소개 카드 | chapters |
+| 학장·총장 인용문, 핵심 메시지 | quote |
+| 페이지 하단 버튼+안내 | cta |
+| 숫자통계(왼쪽) + 설명목록(오른쪽) 2단 | split |
+
+## 블록별 문법 주의사항
+
+**panel — items와 desc 구분**
+- 짧은 목록 나열 → items: 항목1 | 항목2 | 항목3
+- 한 문장 설명 → desc: 설명 문장
+
+**split — left:/right: 섹션 구분 필수**
+:::split
+left-header: 왼쪽 제목
+left-dark: true
+right-header: 오른쪽 제목
+
+left:
+- label: 항목명
+  value: 숫자
+  desc: 설명
+
+right:
+- num: "①"
+  title: 항목 제목
+  desc: 설명
+:::
+
+**roadmap — bullets 사용 (items 아님)**
+- bullets: 항목1 | 항목2 | 항목3
+
+**stepper — items 사용**
+- items: 항목1 | 항목2 | 항목3
+
+**timeline — accent로 강조**
+- accent: true  ← 중요 단계에만 추가
+
+**strategy — letter는 알파벳 1자만**
+- letter: C  ← 한 글자만, 단어 전체 쓰지 말 것
+
+## 텍스트 자료
 
 [여기에 텍스트 자료 붙여넣기]
 ```
