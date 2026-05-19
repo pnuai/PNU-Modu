@@ -1785,6 +1785,87 @@ div[class*="tocCollapsible"],
   border: 0 !important;
 }
 
+/* =========================================
+   좁은 레이아웃 규격 (slim/compact) 대응 반응형 그리드 & 스타일 보정
+   ========================================= */
+
+/* ── 1. slim 규격 (700px, 전단지/리플렛) 대응 ── */
+html[data-layout="slim"] {
+  --ifm-font-size-base: 13.5px !important;
+}
+
+html[data-layout="slim"] .bb-cards-grid,
+html[data-layout="slim"] .bb-chapters-grid,
+html[data-layout="slim"] .bb-stats-grid,
+html[data-layout="slim"] .bb-kpi-row,
+html[data-layout="slim"] .bb-stepper-grid,
+html[data-layout="slim"] .bb-alphagrid-grid,
+html[data-layout="slim"] .bb-strategy-grid,
+html[data-layout="slim"] .bb-panel-grid,
+html[data-layout="slim"] .bb-split-wrap {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-layout="slim"] .bb-kpi-cell {
+  border-right: none !important;
+  border-bottom: 1px solid #e8f0fc !important;
+}
+html[data-layout="slim"] .bb-kpi-cell:last-child {
+  border-bottom: none !important;
+}
+
+html[data-layout="slim"] .bb-hero {
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+  min-height: auto !important;
+}
+
+/* 글자 크기 오버플로우 방지 (clamp 오버라이드) */
+html[data-layout="slim"] .bb-hero-title,
+html[data-layout="slim"] .bb-chapter-title {
+  font-size: 2.1rem !important;
+}
+html[data-layout="slim"] .bb-stat-value {
+  font-size: 2.2rem !important;
+}
+html[data-layout="slim"] .bb-chapter-num {
+  font-size: 3.5rem !important;
+}
+
+/* ── 2. compact 규격 (900px, B5 리플렛) 대응 ── */
+html[data-layout="compact"] {
+  --ifm-font-size-base: 14px !important;
+}
+
+html[data-layout="compact"] .bb-cards-grid.cols-3,
+html[data-layout="compact"] .bb-cards-grid.cols-4,
+html[data-layout="compact"] .bb-chapters-grid.cols-3,
+html[data-layout="compact"] .bb-chapters-grid.cols-4,
+html[data-layout="compact"] .bb-stats-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+html[data-layout="compact"] .bb-split-wrap {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-layout="compact"] .bb-hero {
+  padding-left: 44px !important;
+  padding-right: 44px !important;
+}
+
+html[data-layout="compact"] .bb-hero-title,
+html[data-layout="compact"] .bb-chapter-title {
+  font-size: 2.5rem !important;
+}
+html[data-layout="compact"] .bb-stat-value {
+  font-size: 2.5rem !important;
+}
+html[data-layout="compact"] .bb-chapter-num {
+  font-size: 4.5rem !important;
+}
+
+
 
 
 
