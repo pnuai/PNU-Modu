@@ -471,6 +471,8 @@ const _siteBase = (() => {
 let TOKEN = '';
 let ME = null;
 let selectedFiles = [];
+const rawUrlToShort = new Map(); // raw GitHub URL → 짧은 경로 (저장 시 치환)
+
 // 페이지 로드 즉시 input에 현재 REPO 값 반영 (로그인 전에도 올바른 값 표시)
 document.addEventListener('DOMContentLoaded', () => {
   const repoInput = document.getElementById('input-repo-name');
@@ -1010,8 +1012,10 @@ function initEditor() {
           const ext = blob.name ? blob.name.split('.').pop() : 'png';
           const cleanExt = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext.toLowerCase()) ? ext.toLowerCase() : 'png';
           const filename = `upload_${Date.now()}.${cleanExt}`;
-          // baseUrl 포함한 절대 경로: /PNU-Modu/img/uploads/... (배포) 또는 /img/uploads/... (로컬)
-          const publicUrl = `${_siteBase}img/uploads/${filename}`;
+          // 저장 시 치환할 짧은 경로 (빌드 후 실제 서빙 경로)
+          const shortPath = `${_siteBase}img/uploads/${filename}`;
+          // 프리뷰용 raw URL: GitHub 업로드 직후 바로 접근 가능 (빌드 불필요)
+          const rawUrl = `https://raw.githubusercontent.com/${ORG}/${REPO}/${BRANCH}/static/img/uploads/${filename}`;
 
           // GitHub 미연결 시: base64로 삽입 (로컬 미리보기 전용)
           if (!ORG || !REPO || !TOKEN) {
@@ -1026,7 +1030,7 @@ function initEditor() {
             return;
           }
 
-          // 2. GitHub 업로드 먼저 → 완료 후 짧은 경로로 callback
+          // 2. GitHub 업로드
           showStudioToast('이미지 업로드 중... 잠시 기다려 주세요.', 'info');
 
           const base64Content = await new Promise((resolve, reject) => {
@@ -1051,9 +1055,11 @@ function initEditor() {
             throw new Error(errData.message || 'GitHub API upload failed');
           }
 
-          // 3. 업로드 완료 → 짧은 경로로 삽입 (에디터 + 프리뷰 모두 깔끔하게)
-          callback(publicUrl, filename);
-          showStudioToast('이미지 업로드 완료! 에디터에 삽입되었습니다.', 'success');
+          // 3. 에디터에는 raw URL로 삽입 (빌드 없이 즉시 프리뷰 가능)
+          //    저장 시 shortPath로 치환되어 MD 파일에는 짧은 경로가 저장됨
+          rawUrlToShort.set(rawUrl, shortPath);
+          callback(rawUrl, filename);
+          showStudioToast('이미지 업로드 완료! 프리뷰에서 바로 확인하세요.', 'success');
         } catch (err) {
           console.error('[IMAGE_UPLOAD_ERROR]', err);
           showStudioToast(`이미지 업로드 실패: ${err.message}`, 'error');
@@ -1677,6 +1683,10 @@ window.saveEdit = async () => {
 
   // 저장 시 에디터 본문에 혹시 남아있을 수 있는 프론트매터 블록을 이중 안전 장치로 제거하여 중복 저장 차단
   let cleanMarkdown = toastEditor.getMarkdown().replace(/^\uFEFF?\s*---\s*[\s\S]*?---\s*/, '');
+  // raw GitHub URL \u2192 \uC9E7\uC740 \uACBD\uB85C\uB85C \uCE58\uD658 (MD \uD30C\uC77C\uC5D0\uB294 \uC9E7\uC740 \uACBD\uB85C \uC800\uC7A5)
+  rawUrlToShort.forEach((shortPath, rawUrl) => {
+    cleanMarkdown = cleanMarkdown.replaceAll(rawUrl, shortPath);
+  });
   const finalText = frontmatter + cleanMarkdown;
   const content = btoa(unescape(encodeURIComponent(finalText)));
   
