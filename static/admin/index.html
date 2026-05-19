@@ -790,6 +790,7 @@ async function swapFiles(file1, file2) {
 /* ─── 에디터 초기화 ─── */
 let toastEditor = null;
 let previewReady = false;
+let isSettingContent = false;
 let isSyncingLeft = false;
 let isSyncingRight = false;
 let editorScrollTimeout = null;
@@ -908,7 +909,7 @@ function initEditor() {
     ],
     events: {
       change: () => {
-        syncToPreview();
+        if (!isSettingContent) syncToPreview();
       }
     }
   });
@@ -1236,9 +1237,11 @@ async function doOpenEditModal(name, sha) {
     if(!th.options.length) th.innerHTML = THEMES.map(t => `<option value="${t.value}">${t.label}</option>`).join('');
     th.value = theme;
     
+    isSettingContent = true;
     toastEditor.setMarkdown(editTarget.text);
+    isSettingContent = false;
     document.getElementById('modal-edit').style.display = 'flex';
-    
+
     // 초기 동기화 및 스크롤 최상단 정렬
     setTimeout(() => {
       syncToPreview();
