@@ -3,14 +3,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const themes = {
+  // ── 1~2번 챕터: 기존 공공기관 딥 네이비 블루 ──────────────────────────
   'public-blue': {
     name: 'public-blue',
+    label: '공공 블루 (챕터 1~2)',
     tokens: {
-      primary: '#0b1f4e',      // 참조 사이트 딥 네이비
-      primaryMid: '#1757c2',   // 미디엄 블루
-      primaryLight: '#4a82e4', // 스카이 블루
-      accent: '#e63312',       // 참조 사이트 포인트 레드
-      accentSoft: '#ff5533',   // 소프트 레드
+      primary: '#0b1f4e',
+      primaryMid: '#1757c2',
+      primaryLight: '#4a82e4',
+      accent: '#e63312',
+      accentSoft: '#ff5533',
       teal: '#6fcbae',
       background: '#f0f4f8',
       cardBg: '#ffffff',
@@ -20,56 +22,162 @@ export const themes = {
       radiusCard: '12px',
       shadow: '0 4px 20px rgba(11, 31, 78, 0.12)',
       shadowCard: '0 2px 14px rgba(11, 31, 78, 0.10)',
-      gradientPrimary: 'linear-gradient(135deg, #0b1f4e 0%, #1757c2 100%)',
-      gradientAccent: 'linear-gradient(135deg, #e63312 0%, #ff7a00 100%)',
-      heroBg: 'linear-gradient(135deg, #1565c0 0%, #1976d2 30%, #42a5f5 60%, #1e88e5 80%, #1565c0 100%)',
+      gradientPrimary: 'linear-gradient(160deg, #0b1f4e 0%, #2e6fd4 100%)',
+      gradientAccent: 'linear-gradient(160deg, #e63312 0%, #ff7a00 100%)',
+      heroBg: 'linear-gradient(160deg, #0b1f4e 0%, #1757c2 55%, #4a82e4 100%)',
     }
   },
+
+  // ── 3번 챕터: 딥 포레스트 그린 ────────────────────────────────────────
+  'teal-green': {
+    name: 'teal-green',
+    label: '딥 포레스트 (챕터 3)',
+    tokens: {
+      primary: '#154d30',
+      primaryMid: '#256b4a',
+      primaryLight: '#3dae72',
+      accent: '#b45309',
+      accentSoft: '#d97706',
+      teal: '#1a8a60',
+      background: '#f0f7f3',
+      cardBg: '#ffffff',
+      border: '#b8d9c6',
+      fontFamily: '"Pretendard", "Noto Sans KR", -apple-system, sans-serif',
+      radius: '10px',
+      radiusCard: '14px',
+      shadow: '0 4px 20px rgba(21, 77, 48, 0.12)',
+      shadowCard: '0 2px 12px rgba(21, 77, 48, 0.08)',
+      gradientPrimary: 'linear-gradient(160deg, #154d30 0%, #256b4a 100%)',
+      gradientAccent: 'linear-gradient(160deg, #b45309 0%, #d97706 100%)',
+      heroBg: 'linear-gradient(160deg, #154d30 0%, #256b4a 55%, #3dae72 100%)',
+    }
+  },
+
+  // ── 5~6번 챕터: 로얄 퍼플 + 인디고 ──────────────────────────────────
+  'royal-purple': {
+    name: 'royal-purple',
+    label: '로얄 퍼플 (챕터 5~6)',
+    tokens: {
+      primary: '#3b0764',
+      primaryMid: '#7c3aed',
+      primaryLight: '#a78bfa',
+      accent: '#ec4899',
+      accentSoft: '#f9a8d4',
+      teal: '#818cf8',
+      background: '#faf5ff',
+      cardBg: '#ffffff',
+      border: '#ddd6fe',
+      fontFamily: '"GmarketSans", "Pretendard", -apple-system, sans-serif',
+      radius: '12px',
+      radiusCard: '16px',
+      shadow: '0 4px 20px rgba(59, 7, 100, 0.12)',
+      shadowCard: '0 2px 14px rgba(59, 7, 100, 0.08)',
+      gradientPrimary: 'linear-gradient(160deg, #3b0764 0%, #7c3aed 100%)',
+      gradientAccent: 'linear-gradient(160deg, #ec4899 0%, #f9a8d4 100%)',
+      heroBg: 'linear-gradient(160deg, #3b0764 0%, #6d28d9 55%, #a78bfa 100%)',
+    }
+  },
+
+  // ── 7~8번 챕터: 따뜻한 버건디 + 로즈골드 ─────────────────────────────
+  'burgundy-gold': {
+    name: 'burgundy-gold',
+    label: '버건디 골드 (챕터 7~8)',
+    tokens: {
+      primary: '#4c0519',
+      primaryMid: '#be123c',
+      primaryLight: '#fb7185',
+      accent: '#d97706',
+      accentSoft: '#fbbf24',
+      teal: '#f472b6',
+      background: '#fff1f2',
+      cardBg: '#ffffff',
+      border: '#fecdd3',
+      fontFamily: '"Pretendard", "Noto Sans KR", -apple-system, sans-serif',
+      radius: '8px',
+      radiusCard: '12px',
+      shadow: '0 4px 20px rgba(76, 5, 25, 0.10)',
+      shadowCard: '0 2px 12px rgba(76, 5, 25, 0.08)',
+      gradientPrimary: 'linear-gradient(160deg, #4c0519 0%, #be123c 100%)',
+      gradientAccent: 'linear-gradient(160deg, #d97706 0%, #fbbf24 100%)',
+      heroBg: 'linear-gradient(160deg, #4c0519 0%, #be123c 55%, #fda4af 100%)',
+    }
+  },
+
+  // ── 스타트업 / 다크 테마 ──────────────────────────────────────────────
   'startup-gradient': {
     name: 'startup-gradient',
+    label: '스타트업 다크',
     tokens: {
-      primary: '#6366f1',      // Indigo
-      primaryMid: '#8b5cf6',   // Violet
-      primaryLight: '#a78bfa', // Light Violet
-      accent: '#f43f5e',       // Rose
-      accentSoft: '#fb7185',   // Soft Rose
+      primary: '#6366f1',
+      primaryMid: '#8b5cf6',
+      primaryLight: '#a78bfa',
+      accent: '#f43f5e',
+      accentSoft: '#fb7185',
       teal: '#2dd4bf',
-      background: '#09090b',   // Sleek Dark Theme
+      background: '#09090b',
       cardBg: '#18181b',
       border: '#27272a',
       fontFamily: '"GmarketSans", "Pretendard", -apple-system, sans-serif',
-      radius: '24px',          // Framer-style bubbly rounded
+      radius: '24px',
       radiusCard: '20px',
       shadow: '0 8px 30px rgba(99, 102, 241, 0.15)',
       shadowCard: '0 4px 20px rgba(0, 0, 0, 0.3)',
-      gradientPrimary: 'linear-gradient(135deg, #6366f1 0%, #d946ef 100%)',
-      gradientAccent: 'linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)',
-      heroBg: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%)',
+      gradientPrimary: 'linear-gradient(160deg, #6366f1 0%, #d946ef 100%)',
+      gradientAccent: 'linear-gradient(160deg, #f43f5e 0%, #fb7185 100%)',
+      heroBg: 'linear-gradient(160deg, #0f172a 0%, #1e1b4b 60%, #4c1d95 100%)',
     }
   },
+
+  // ── 미니멀 라이트 ─────────────────────────────────────────────────────
   'minimal-light': {
     name: 'minimal-light',
+    label: '미니멀 라이트',
     tokens: {
-      primary: '#18181b',      // Zinc 900
-      primaryMid: '#3f3f46',   // Zinc 700
-      primaryLight: '#71717a', // Zinc 500
-      accent: '#f59e0b',       // Amber
-      accentSoft: '#fbbf24',   // Soft Amber
+      primary: '#18181b',
+      primaryMid: '#3f3f46',
+      primaryLight: '#71717a',
+      accent: '#f59e0b',
+      accentSoft: '#fbbf24',
       teal: '#10b981',
       background: '#ffffff',
       cardBg: '#fafafa',
       border: '#e4e4e7',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      radius: '0px',           // Premium architectural square borders
+      radius: '0px',
       radiusCard: '0px',
       shadow: 'none',
       shadowCard: 'none',
       borderCard: '1px solid #e4e4e7',
-      gradientPrimary: 'linear-gradient(135deg, #18181b 0%, #3f3f46 100%)',
-      gradientAccent: 'linear-gradient(135deg, #18181b 0%, #f59e0b 100%)',
-      heroBg: 'linear-gradient(180deg, #fafafa 0%, #eaeaea 100%)',
+      gradientPrimary: 'linear-gradient(160deg, #27272a 0%, #71717a 100%)',
+      gradientAccent: 'linear-gradient(160deg, #3f3f46 0%, #f59e0b 100%)',
+      heroBg: 'linear-gradient(160deg, #fafafa 0%, #eaeaea 100%)',
     }
-  }
+  },
+
+  // ── 4번 챕터: 딥 스틸 블루 ──────────────────────────────────────────
+  'ocean-cyan': {
+    name: 'ocean-cyan',
+    label: '딥 스틸 블루 (챕터 4)',
+    tokens: {
+      primary: '#153d63',
+      primaryMid: '#2a6898',
+      primaryLight: '#3d8ec4',
+      accent: '#1b6ca8',
+      accentSoft: '#3d8ec4',
+      teal: '#2a7ab8',
+      background: '#f0f4f9',
+      cardBg: '#ffffff',
+      border: '#c2d4e8',
+      fontFamily: '"Pretendard", "Noto Sans KR", -apple-system, sans-serif',
+      radius: '10px',
+      radiusCard: '14px',
+      shadow: '0 4px 20px rgba(21, 61, 99, 0.12)',
+      shadowCard: '0 2px 12px rgba(21, 61, 99, 0.08)',
+      gradientPrimary: 'linear-gradient(160deg, #153d63 0%, #2a6898 100%)',
+      gradientAccent: 'linear-gradient(160deg, #1b6ca8 0%, #3d8ec4 100%)',
+      heroBg: 'linear-gradient(160deg, #153d63 0%, #2a6898 55%, #3d8ec4 100%)',
+    }
+  },
 };
 
 export const ThemeProvider = ({ children, initialTheme = 'public-blue' }) => {

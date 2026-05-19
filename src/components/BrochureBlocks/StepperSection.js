@@ -20,7 +20,6 @@ export default function StepperSection({ header, headersub, items }) {
     return [];
   }, [items]);
 
-  const STEP_COLORS = ['#1565c0', '#1976d2', '#1e88e5', '#2196f3', '#42a5f5'];
 
   return (
     <div className="bb-stepper-wrap">
@@ -32,21 +31,20 @@ export default function StepperSection({ header, headersub, items }) {
       )}
       <div className="bb-stepper-grid" style={{ gridTemplateColumns: `repeat(${parsed.length}, 1fr)` }}>
         {parsed.map((item, i) => {
-          const color = STEP_COLORS[i % STEP_COLORS.length];
           const bullets = item.items
             ? String(item.items).split('|').map(b => b.trim()).filter(Boolean)
             : [];
           return (
-            <div key={i} className="bb-stepper-cell" style={{ borderRight: i < parsed.length - 1 ? '1px solid #e8f0fc' : 'none' }}>
+            <div key={i} className="bb-stepper-cell" style={{ borderRight: i < parsed.length - 1 ? '1px solid var(--theme-border, #e8f0fc)' : 'none' }}>
               <div className="bb-stepper-badge-row">
-                <span className="bb-stepper-badge" style={{ background: color }}>{item.phase || `${i + 1}단계`}</span>
+                <span className="bb-stepper-badge">{item.phase || `${i + 1}단계`}</span>
                 {item.period && <span className="bb-stepper-period">{item.period}</span>}
               </div>
               {item.title && <div className="bb-stepper-title">{item.title}</div>}
               {bullets.length > 0 && (
                 <ul className="bb-panel-bullets">
                   {bullets.map((b, j) => (
-                    <li key={j} style={{ '--bullet-color': color }}>{b}</li>
+                    <li key={j}>{b}</li>
                   ))}
                 </ul>
               )}

@@ -3,7 +3,7 @@ id: part-4
 title: 교육환경 조성
 sidebar_position: 4
 nav_label: 환경개선
-theme: public-blue
+theme: ocean-cyan
 hide_title: true
 ---
 

@@ -21,7 +21,7 @@ const chapters =
     "id": "part-3",
     "title": "대학의 자율적인 교육혁신",
     "description": "",
-    "theme": "public-blue",
+    "theme": "teal-green",
     "link": "/docs/part-3",
     "sidebar_position": 3
   },
@@ -29,7 +29,7 @@ const chapters =
     "id": "part-4",
     "title": "교육환경 조성",
     "description": "",
-    "theme": "public-blue",
+    "theme": "ocean-cyan",
     "link": "/docs/part-4",
     "sidebar_position": 4
   },
@@ -37,7 +37,7 @@ const chapters =
     "id": "part-5",
     "title": "SW전공교육 강화",
     "description": "",
-    "theme": "public-blue",
+    "theme": "royal-purple",
     "link": "/docs/part-5",
     "sidebar_position": 5
   },
@@ -45,7 +45,7 @@ const chapters =
     "id": "part-6",
     "title": "AI·SW융합교육 및 비전공자 전문교육 확대",
     "description": "",
-    "theme": "public-blue",
+    "theme": "royal-purple",
     "link": "/docs/part-6",
     "sidebar_position": 6
   },
@@ -53,7 +53,7 @@ const chapters =
     "id": "part-7",
     "title": "성과확산 및 인재기반 조성",
     "description": "",
-    "theme": "public-blue",
+    "theme": "burgundy-gold",
     "link": "/docs/part-7",
     "sidebar_position": 7
   },
@@ -61,9 +61,25 @@ const chapters =
     "id": "part-8",
     "title": "대학 일반 현황",
     "description": "",
-    "theme": "public-blue",
+    "theme": "minimal-light",
     "link": "/docs/part-8",
     "sidebar_position": 8
+  },
+  {
+    "id": "demo-v1-5",
+    "title": "SW중심대학 사업 소개 (HTML 인라인 버전)",
+    "description": "",
+    "theme": "minimal-light",
+    "link": "/docs/demo-v1-5",
+    "sidebar_position": 98
+  },
+  {
+    "id": "demo-v1",
+    "title": "SW중심대학 사업 소개 (텍스트 버전)",
+    "description": "",
+    "theme": "minimal-light",
+    "link": "/docs/demo-v1",
+    "sidebar_position": 99
   },
   {
     "id": "template",
@@ -72,6 +88,14 @@ const chapters =
     "theme": "public-blue",
     "link": "/docs/template",
     "sidebar_position": 99
+  },
+  {
+    "id": "demo-v2",
+    "title": "SW중심대학 사업 소개 (디자인 버전)",
+    "description": "",
+    "theme": "public-blue",
+    "link": "/docs/demo-v2",
+    "sidebar_position": 100
   }
 ];
 

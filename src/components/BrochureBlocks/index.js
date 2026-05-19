@@ -15,6 +15,7 @@ import AlphaGridSection from './AlphaGridSection';
 import PanelSection from './PanelSection';
 import StepperSection from './StepperSection';
 import SplitSection from './SplitSection';
+import DataTableSection from './DataTableSection';
 
 export {
   ThemeProvider,
@@ -35,4 +36,5 @@ export {
   PanelSection,
   StepperSection,
   SplitSection,
+  DataTableSection,
 };

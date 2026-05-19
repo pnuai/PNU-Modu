@@ -478,33 +478,41 @@ div[class*="tocCollapsible"],
 /* =========================================
    페이지 하단 편집 버튼 (Edit this page) 디자인 업그레이드
    ========================================= */
+/* 편집 버튼 wrapper — pagination-nav와 동일한 여백, 우측 정렬 */
+.theme-doc-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding: 16px max(24px, calc((100vw - var(--content-max-width)) / 2)) 32px !important;
+}
+
 .theme-edit-this-page {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--navy-light) 0%, var(--blue) 100%);
+  background: var(--theme-gradient-primary, linear-gradient(135deg, var(--navy-light) 0%, var(--blue) 100%));
   color: white !important;
-  padding: 10px 20px;
+  padding: 9px 18px;
   border-radius: 999px;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
   text-decoration: none !important;
-  box-shadow: 0 4px 14px rgba(26, 79, 160, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  margin-top: 30px;
+  opacity: 0.85;
+}
+
+.theme-edit-this-page:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  filter: brightness(1.08);
+  opacity: 1;
 }
 
 .theme-edit-this-page svg {
   fill: currentColor;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   transition: transform 0.2s ease;
-}
-
-.theme-edit-this-page:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(26, 79, 160, 0.4);
-  background: linear-gradient(135deg, var(--blue) 0%, #2563eb 100%);
 }
 
 .theme-edit-this-page:hover svg {
@@ -840,14 +848,15 @@ div[class*="tocCollapsible"],
   }
 }
 
-/* ── Content Wrappers (KPI, Strategy, AlphaGrid, Panel, Split, Stepper, ChapterHeader) ── */
+/* ── Content Wrappers (KPI, Strategy, AlphaGrid, Panel, Split, Stepper, ChapterHeader, DataTable) ── */
 .bb-kpi-wrap,
 .bb-strategy-wrap,
 .bb-alphagrid-wrap,
 .bb-panel-wrap,
 .bb-split-wrap,
 .bb-stepper-wrap,
-.bb-chapter-header {
+.bb-chapter-header,
+.bb-datatable-wrap {
   max-width: var(--content-max-width) !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -862,7 +871,8 @@ div[class*="tocCollapsible"],
   .bb-panel-wrap,
   .bb-split-wrap,
   .bb-stepper-wrap,
-  .bb-chapter-header {
+  .bb-chapter-header,
+  .bb-datatable-wrap {
     width: calc(100% - 40px) !important;
   }
 }
@@ -1864,9 +1874,6 @@ html[data-layout="compact"] .bb-stat-value {
 html[data-layout="compact"] .bb-chapter-num {
   font-size: 4.5rem !important;
 }
-
-
-
 
 
 

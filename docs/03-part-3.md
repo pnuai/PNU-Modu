@@ -3,7 +3,7 @@ id: part-3
 title: 대학의 자율적인 교육혁신
 sidebar_position: 3
 nav_label: 교육혁신
-theme: public-blue
+theme: teal-green
 hide_title: true
 ---
 

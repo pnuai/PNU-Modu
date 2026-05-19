@@ -3,6 +3,7 @@ import { useLocation } from '@docusaurus/router';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { useTheme } from '@site/src/components/BrochureBlocks/ThemeContext';
 import styles from './navbar.module.css';
 
 export default function Navbar() {
@@ -12,13 +13,31 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { siteConfig } = useDocusaurusContext();
   const navItems = siteConfig.customFields?.navItems || [];
+  const { theme } = useTheme();
 
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  const isActive = (to) => location.pathname.startsWith(to);
+  const isActive = (to) => {
+    const p = location.pathname.replace(/\/$/, '');
+    const t = to.replace(/\/$/, '');
+    return p === t || p.startsWith(t + '/');
+  };
+
+  const navStyle = {
+    background: theme.tokens.gradientPrimary,
+    boxShadow: `0 2px 16px ${theme.tokens.shadow || 'rgba(0,0,0,0.2)'}`,
+  };
+
+  const mobileMenuStyle = {
+    background: theme.tokens.primary,
+  };
+
+  const actionBtnStyle = {
+    color: theme.tokens.primaryMid,
+  };
 
   return (
-    <nav className={styles.navbar}>
+    <nav className={styles.navbar} style={navStyle}>
       <div className={styles.inner}>
         {/* 로고 */}
         <Link to="/" className={styles.logo}>
@@ -44,10 +63,10 @@ export default function Navbar() {
 
         {/* 우측 링크 */}
         <div className={styles.actions}>
-          <a href={adminUrl} className={styles.actionBtn} target="_blank" rel="noopener noreferrer">
+          <a href={adminUrl} className={styles.actionBtn} style={actionBtnStyle} target="_blank" rel="noopener noreferrer">
             관리
           </a>
-          <a href="https://pnuai.github.io" className={styles.actionBtn} target="_blank" rel="noopener noreferrer">
+          <a href="https://pnuai.github.io" className={styles.actionBtn} style={actionBtnStyle} target="_blank" rel="noopener noreferrer">
             허브 홈
           </a>
         </div>
@@ -66,7 +85,7 @@ export default function Navbar() {
 
       {/* 모바일 드롭다운 */}
       {menuOpen && (
-        <div className={styles.mobileMenu}>
+        <div className={styles.mobileMenu} style={mobileMenuStyle}>
           {navItems.map(({ num, label, to }) => (
             <Link
               key={to}

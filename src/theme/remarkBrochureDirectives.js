@@ -8,7 +8,7 @@ function remarkBrochureDirectives() {
         node.type === 'leafDirective' ||
         node.type === 'textDirective'
       ) {
-        const targetBlocks = ['hero', 'stats', 'cards', 'timeline', 'quote', 'cta', 'chapters', 'roadmap', 'badges', 'chapter-header', 'chapterheader', 'kpi', 'strategy', 'alphagrid', 'panel', 'stepper', 'split'];
+        const targetBlocks = ['hero', 'stats', 'cards', 'timeline', 'quote', 'cta', 'chapters', 'roadmap', 'badges', 'chapter-header', 'chapterheader', 'kpi', 'strategy', 'alphagrid', 'panel', 'stepper', 'split', 'datatable'];
         if (!targetBlocks.includes(node.name)) return;
 
         const data = node.data || (node.data = {});
@@ -21,6 +21,9 @@ function remarkBrochureDirectives() {
           if (n.type === 'break') return '\n';  // softbreak → 실제 개행으로 복원
           if (n.type === 'code') return `\n\`\`\`\n${n.value}\n\`\`\`\n`;
           if (n.type === 'inlineCode') return `\`${n.value}\``;
+          if (n.type === 'strong') return n.children ? `**${n.children.map(toMarkdownText).join('')}**` : '';
+          if (n.type === 'emphasis') return n.children ? `_${n.children.map(toMarkdownText).join('')}_` : '';
+          if (n.type === 'delete') return n.children ? `~~${n.children.map(toMarkdownText).join('')}~~` : '';
 
           if (n.type === 'paragraph') {
             return n.children ? n.children.map(toMarkdownText).join('') + '\n' : '';
@@ -91,7 +94,23 @@ function remarkBrochureDirectives() {
         if (rawBody) {
           const lines = rawBody.split('\n');
 
-          if (node.name === 'split') {
+          if (node.name === 'datatable') {
+            // datatable: 메타 줄(columns, align, note 등) + "- 셀1 | 셀2 | ..." 행 목록
+            const metaLines = [];
+            const listLines = [];
+            let isListStarted = false;
+            for (const line of lines) {
+              if (line.trim().startsWith('-')) isListStarted = true;
+              if (isListStarted) listLines.push(line);
+              else metaLines.push(line);
+            }
+            parsedProps = parseMetaLines(metaLines);
+            // 각 "- 셀1 | 셀2 | ..." 행을 { row: "셀1 | 셀2 | ..." } 객체로 저장
+            const rowObjs = listLines
+              .map(l => { const m = l.match(/^-\s+(.*)/); return m ? { row: m[1].trim() } : null; })
+              .filter(Boolean);
+            if (rowObjs.length > 0) parsedProps.items = toBase64(rowObjs);
+          } else if (node.name === 'split') {
             // split: left: / right: 섹션 분리
             const metaLines = [];
             let leftLines = [], rightLines = [];
@@ -161,7 +180,7 @@ function remarkBrochureDirectives() {
         const nameMap = {
           chapterheader: 'ChapterHeader', 'chapter-header': 'ChapterHeader',
           kpi: 'kpi', strategy: 'strategy', alphagrid: 'alphagrid',
-          panel: 'panel', stepper: 'stepper', split: 'split',
+          panel: 'panel', stepper: 'stepper', split: 'split', datatable: 'datatable',
         };
         data.hName = nameMap[node.name] || node.name;
         data.hProperties = {

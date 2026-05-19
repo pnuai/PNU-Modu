@@ -24,6 +24,7 @@ import {
   PanelSection,
   StepperSection,
   SplitSection,
+  DataTableSection,
 } from '@site/src/components/BrochureBlocks';
 
 // 모든 .md / .mdx 파일에서 import 없이 바로 사용 가능
@@ -58,6 +59,7 @@ export default {
   panel: PanelSection,
   stepper: StepperSection,
   split: SplitSection,
+  datatable: DataTableSection,
   HeroSection,
   StatsSection,
   CardsSection,
@@ -74,4 +76,5 @@ export default {
   PanelSection,
   StepperSection,
   SplitSection,
+  DataTableSection,
 };

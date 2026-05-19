@@ -898,6 +898,299 @@ right:
 
 ---
 
+## ⑯ datatable — 데이터 테이블
+
+열 헤더가 있는 정형 데이터 표를 브로슈어 스타일로 표시합니다. 입학 전형표, 모집 인원표 등에 사용합니다.
+
+**속성:**
+| 속성 | 필수 | 설명 |
+|------|------|------|
+| header | 필수 | 상단 헤더 제목 |
+| headersub | 선택 | 헤더 영문 부제목 |
+| columns | 필수 | 열 이름 (`\|` 파이프 구분) |
+| align | 선택 | 각 열 정렬 (`left \| center \| right`, 기본 left) |
+| note | 선택 | 하단 주석 |
+
+**행 항목:**
+
+`-` 로 시작하며 셀 값을 `|` 파이프로 구분합니다. 셀 안에서 아래 인라인 서식이 지원됩니다.
+
+| 문법 | 결과 |
+|------|------|
+| `**텍스트**` | 굵게 (테마 primary 색) |
+| `[~텍스트]` | 이탤릭 |
+| `[!텍스트]` | 강조색 (테마 accent 색) |
+
+```
+:::datatable
+header: 2026학년도 모집 인원
+headersub: ENROLLMENT QUOTAS
+columns: 모집단위 | 정원 | 비고
+align: left | center | left
+note: ※ 인공지능전공은 부산대-경북대 공동학과
+
+- **컴퓨터공학전공** | [!84명] | SW 전공 핵심 학과
+- **인공지능전공** | [!60명] | 전국 최초 공동학과
+- **데이터사이언스전공** | 44명 | [~의생명융합공학부 내 전공]
+:::
+```
+
+:::datatable
+header: 2026학년도 모집 인원
+headersub: ENROLLMENT QUOTAS
+columns: 모집단위 | 정원 | 비고
+align: left | center | left
+note: ※ 인공지능전공은 부산대-경북대 공동학과
+
+- **컴퓨터공학전공** | [!84명] | SW 전공 핵심 학과
+- **인공지능전공** | [!60명] | 전국 최초 공동학과
+- **데이터사이언스전공** | 44명 | [~의생명융합공학부 내 전공]
+:::
+
+---
+
+## MDX 인라인 컴포넌트 — JSX 태그로 자유롭게 꾸미기
+
+`:::` 디렉티브가 아닌 **JSX 컴포넌트 태그**를 일반 마크다운 문단 사이에 직접 쓸 수 있습니다. import 없이 바로 사용 가능합니다.
+
+---
+
+### `<Highlight>` — 형광펜 하이라이트
+
+배경색이 있는 인라인 강조 스팬입니다. 문장 중간에 끼워 쓸 수 있습니다.
+
+| 속성 | 설명 |
+|------|------|
+| color | 배경색 (기본 `#2563eb` 파란색) |
+
+```jsx
+취업률이 <Highlight>89.3%</Highlight>로 전국 상위 5% 수준입니다.
+
+<Highlight color="#16a34a">합격</Highlight> 또는 <Highlight color="#dc2626">불합격</Highlight>
+```
+
+취업률이 <Highlight>89.3%</Highlight>로 전국 상위 5% 수준입니다.
+
+<Highlight color="#16a34a">합격</Highlight> 또는 <Highlight color="#dc2626">불합격</Highlight>
+
+---
+
+### `<Text>` — 폰트 크기·굵기·색상·폰트 자유 지정
+
+인라인 또는 블록 텍스트에 임의 스타일을 줍니다.
+
+| 속성 | 설명 |
+|------|------|
+| size | 폰트 크기 (`"24px"`, `"2rem"`, 숫자 입력 시 px 자동) |
+| weight | 굵기 (`"700"`, `"900"` 등) |
+| color | 색상 (`"red"`, `"#1565c0"` 등) |
+| family | 폰트 (`noto` / `pretendard` / `gmarket` / `nanum` 또는 직접 입력) |
+
+```jsx
+<Text size="28px" weight="900" color="#1565c0">크고 굵은 파란 텍스트</Text>
+
+<Text size="13" color="#6b7a99">작고 회색인 보조 설명</Text>
+
+폰트 변경: <Text family="gmarket" weight="700">GmarketSans 폰트</Text>
+```
+
+<Text size="28px" weight="900" color="#1565c0">크고 굵은 파란 텍스트</Text>
+
+<Text size="13" color="#6b7a99">작고 회색인 보조 설명</Text>
+
+폰트 변경: <Text family="gmarket" weight="700">GmarketSans 폰트</Text>
+
+---
+
+### `<Callout>` — 알림/강조 박스
+
+`info` / `success` / `warning` / `danger` 네 가지 타입의 박스입니다.
+
+| 속성 | 설명 |
+|------|------|
+| type | `info`(기본) / `success` / `warning` / `danger` |
+| title | 박스 제목 (선택) |
+
+```jsx
+<Callout type="info" title="안내">
+  2026학년도 입시 일정은 별도 공지를 확인하세요.
+</Callout>
+
+<Callout type="success" title="선정 완료">
+  부산대학교는 SW중심대학 사업에 최종 선정되었습니다.
+</Callout>
+
+<Callout type="warning">수능최저학력기준은 모집단위별로 다릅니다.</Callout>
+
+<Callout type="danger" title="주의">마감일을 반드시 확인하세요.</Callout>
+```
+
+<Callout type="info" title="안내">
+  2026학년도 입시 일정은 별도 공지를 확인하세요.
+</Callout>
+
+<Callout type="success" title="선정 완료">
+  부산대학교는 SW중심대학 사업에 최종 선정되었습니다.
+</Callout>
+
+<Callout type="warning">수능최저학력기준은 모집단위별로 다릅니다.</Callout>
+
+<Callout type="danger" title="주의">마감일을 반드시 확인하세요.</Callout>
+
+---
+
+### `<Columns>` / `<Col>` — 다단 레이아웃
+
+일반 마크다운 내용을 가로로 나란히 배치합니다.
+
+```jsx
+<Columns>
+  <Col>
+
+  **왼쪽 열**
+
+  일반 마크다운도 그대로 씁니다.
+
+  </Col>
+  <Col>
+
+  **오른쪽 열**
+
+  - 목록도 가능
+  - 아무거나
+
+  </Col>
+</Columns>
+```
+
+<Columns>
+  <Col>
+
+  **왼쪽 열**
+
+  일반 마크다운도 그대로 씁니다.
+
+  </Col>
+  <Col>
+
+  **오른쪽 열**
+
+  - 목록도 가능
+  - 아무거나
+
+  </Col>
+</Columns>
+
+---
+
+### 폰트 굵기 전체 미리보기 (눈누 스타일)
+
+`weight` 100–900을 한눈에 비교할 때 사용합니다. 폰트체별로 지원하는 굵기가 다르므로 실제 렌더링으로 확인하세요.
+
+```jsx
+<Text size="22px" weight="100" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 100</Text>
+<Text size="22px" weight="200" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 200</Text>
+<Text size="22px" weight="300" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 300</Text>
+<Text size="22px" weight="400" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 400</Text>
+<Text size="22px" weight="500" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 500</Text>
+<Text size="22px" weight="600" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 600</Text>
+<Text size="22px" weight="700" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 700</Text>
+<Text size="22px" weight="800" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 800</Text>
+<Text size="22px" weight="900" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 900</Text>
+```
+
+<Text size="22px" weight="100" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 100</Text>
+<Text size="22px" weight="200" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 200</Text>
+<Text size="22px" weight="300" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 300</Text>
+<Text size="22px" weight="400" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 400</Text>
+<Text size="22px" weight="500" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 500</Text>
+<Text size="22px" weight="600" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 600</Text>
+<Text size="22px" weight="700" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 700</Text>
+<Text size="22px" weight="800" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 800</Text>
+<Text size="22px" weight="900" color="#1565c0" display="block">세상에 이런 폰트가 나오다니 천재인듯 — 900</Text>
+
+폰트를 바꾸려면 `family` 속성을 추가하세요: `family="gmarket"` / `family="noto"` / `family="pretendard"` / `family="nanum"`
+
+---
+
+### `<Details>` — 접기/펼치기 (아코디언)
+
+클릭하면 펼쳐지는 상세 설명 박스입니다.
+
+| 속성 | 설명 |
+|------|------|
+| summary | 접힌 상태에서 보이는 제목 |
+
+```jsx
+<Details summary="컴퓨터공학전공 입학전형 상세 안내">
+  학생부교과전형 20명, 지역인재전형 12명, 학생부종합전형 15명으로 구성됩니다.
+  논술전형은 6명이며 정시 가군 10명, 나군 10명입니다.
+</Details>
+```
+
+<Details summary="컴퓨터공학전공 입학전형 상세 안내">
+  학생부교과전형 20명, 지역인재전형 12명, 학생부종합전형 15명으로 구성됩니다.
+  논술전형은 6명이며 정시 가군 10명, 나군 10명입니다.
+</Details>
+
+---
+
+### `<StepList>` / `<StepItem>` — 번호형 단계 목록
+
+순서가 중요한 절차·프로세스를 세로로 나열합니다.
+
+| StepItem 속성 | 설명 |
+|------|------|
+| step | 원 안에 표시할 번호 또는 텍스트 |
+| title | 단계 제목 |
+
+```jsx
+<StepList>
+  <StepItem step="1" title="원서 접수">
+    입학처 홈페이지에서 온라인 원서를 작성하고 전형료를 납부합니다.
+  </StepItem>
+  <StepItem step="2" title="서류 제출">
+    학생부, 자기소개서 등 요구 서류를 기한 내에 제출합니다.
+  </StepItem>
+  <StepItem step="3" title="합격자 발표">
+    입학처 홈페이지 및 개별 통보로 결과를 확인합니다.
+  </StepItem>
+</StepList>
+```
+
+<StepList>
+  <StepItem step="1" title="원서 접수">
+    입학처 홈페이지에서 온라인 원서를 작성하고 전형료를 납부합니다.
+  </StepItem>
+  <StepItem step="2" title="서류 제출">
+    학생부, 자기소개서 등 요구 서류를 기한 내에 제출합니다.
+  </StepItem>
+  <StepItem step="3" title="합격자 발표">
+    입학처 홈페이지 및 개별 통보로 결과를 확인합니다.
+  </StepItem>
+</StepList>
+
+---
+
+### `<HeroButton>` — 링크 버튼
+
+페이지 내 링크 버튼입니다. 파란 채움형과 테두리형 두 가지입니다.
+
+| 속성 | 설명 |
+|------|------|
+| href | 이동할 경로 |
+| outline | `true` 입력 시 테두리형 |
+
+```jsx
+<HeroButton href="/docs/intro">브로슈어 처음으로</HeroButton>
+<HeroButton href="/docs/intro" outline>테두리형 버튼</HeroButton>
+```
+
+<HeroButton href="/docs/intro">브로슈어 처음으로</HeroButton>
+<HeroButton href="/docs/intro" outline>테두리형 버튼</HeroButton>
+
+---
+
 ## 프론트매터(파일 헤더) 작성 규칙
 
 모든 md 파일 맨 위에 반드시 다음 형식을 포함합니다:
@@ -969,6 +1262,7 @@ theme: public-blue
 | 학장·총장 인용문, 핵심 메시지 | quote |
 | 페이지 하단 버튼+안내 | cta |
 | 숫자통계(왼쪽) + 설명목록(오른쪽) 2단 | split |
+| 열 헤더가 있는 정형 표 (입학전형, 모집인원 등) | datatable |
 
 ## 블록별 문법 주의사항
 
@@ -1004,6 +1298,12 @@ right:
 
 **strategy — letter는 알파벳 1자만**
 - letter: C  ← 한 글자만, 단어 전체 쓰지 말 것
+
+**datatable — 행은 파이프 구분, 인라인 서식 지원**
+- columns와 align의 열 수를 반드시 일치시킬 것
+- 행: - **굵게** | [!강조색] | [~이탤릭]  ← | 파이프로 구분, 앞에 - 붙임
+- 빈 셀(해당 없음): - 로 표시
+- note는 하단 주석 한 줄
 
 ## 텍스트 자료
 

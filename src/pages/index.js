@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { ThemeProvider } from '@site/src/components/BrochureBlocks/ThemeContext';
+import { ThemeProvider, useTheme } from '@site/src/components/BrochureBlocks/ThemeContext';
 
 const COLORS = [
   '#1565c0', '#1976d2', '#1e88e5', '#2196f3',
   '#1976d2', '#1565c0', '#1e88e5', '#2196f3',
   '#1565c0', '#1976d2',
 ];
+
+function HomeResetTheme() {
+  const { changeTheme } = useTheme();
+  useEffect(() => {
+    changeTheme('public-blue');
+  }, []);
+  return null;
+}
 
 export default function Home() {
   const adminUrl = useBaseUrl('/admin/');
@@ -24,6 +32,7 @@ export default function Home() {
 
   return (
     <ThemeProvider initialTheme="public-blue">
+      <HomeResetTheme />
       <Layout title="PNU AI·SW 중심대학 브로슈어" description="부산대학교 AI융합교육원 브로슈어 포털">
         <main style={{ background: '#f0f4f8', minHeight: '100vh' }}>
 

@@ -15,7 +15,7 @@ const CHAPTERS = [
   { num: '08', label: '일반현황',  path: '/chapter/08' },
 ];
 
-export default function ChapterLayout({ chapterNum, title, description, children }) {
+export default function ChapterLayout({ chapterNum, title, description, theme = 'public-blue', children }) {
   const currentIdx = CHAPTERS.findIndex(c => c.num === chapterNum);
   const prev = currentIdx > 0 ? CHAPTERS[currentIdx - 1] : null;
   const next = currentIdx < CHAPTERS.length - 1 ? CHAPTERS[currentIdx + 1] : null;
@@ -26,7 +26,7 @@ export default function ChapterLayout({ chapterNum, title, description, children
   const restChildren = childArray.slice(1);
 
   return (
-    <ThemeProvider initialTheme="public-blue">
+    <ThemeProvider initialTheme={theme}>
       <Layout title={`${chapterNum}. ${title}`} description={description}>
         <main className={styles.main}>
           {/* Hero — full width */}

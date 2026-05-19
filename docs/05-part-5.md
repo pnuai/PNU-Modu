@@ -3,7 +3,7 @@ id: part-5
 title: "SW전공교육 강화"
 sidebar_position: 5
 nav_label: 전공교육
-theme: public-blue
+theme: royal-purple
 hide_title: true
 ---
 
