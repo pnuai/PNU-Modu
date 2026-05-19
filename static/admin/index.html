@@ -815,7 +815,6 @@ function handleEditorScroll(scrollTarget) {
 
 // 에디터의 특정 행을 형광펜 하이라이트하는 시각적 피드백 함수
 let currentActiveLine = 1;
-let highlightObserver = null;
 
 function highlightEditorLine(line) {
   if (typeof line === 'number' && line > 0) {
@@ -1021,20 +1020,6 @@ function initEditor() {
     editorEl.addEventListener('click', trackCaret);
     toastEditor.on('change', trackCaret);
     console.log("%c[EDITOR] Caret tracking listeners registered successfully.", "color: #10b981;");
-
-    // MutationObserver를 사용하여 ProseMirror의 자식 노드 변화가 있을 때마다 하이라이트 강제 재적용 (ProseMirror 리렌더링 완벽 극복)
-    const pmContainer = editorEl.querySelector('.ProseMirror');
-    if (pmContainer) {
-      if (highlightObserver) highlightObserver.disconnect();
-      highlightObserver = new MutationObserver(() => {
-        // 무한 루프를 방지하기 위해 옵저버를 잠시 해제한 후 하이라이트를 다시 입힙니다.
-        highlightObserver.disconnect();
-        applyHighlightToActiveLine();
-        highlightObserver.observe(pmContainer, { childList: true, subtree: true, characterData: true });
-      });
-      highlightObserver.observe(pmContainer, { childList: true, subtree: true, characterData: true });
-      console.log("%c[EDITOR] MutationObserver for highlight registered successfully.", "color: #10b981;");
-    }
   }
 
   // 테마 선택 값 변경 시 즉시 라이브 프리뷰 업데이트 동기화
