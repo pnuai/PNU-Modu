@@ -813,6 +813,33 @@ div[class*="tocCollapsible"],
   }
 }
 
+/* ── Content Wrappers (KPI, Strategy, AlphaGrid, Panel, Split, Stepper, ChapterHeader) ── */
+.bb-kpi-wrap,
+.bb-strategy-wrap,
+.bb-alphagrid-wrap,
+.bb-panel-wrap,
+.bb-split-wrap,
+.bb-stepper-wrap,
+.bb-chapter-header {
+  max-width: var(--content-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: calc(100% - 48px) !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+  .bb-kpi-wrap,
+  .bb-strategy-wrap,
+  .bb-alphagrid-wrap,
+  .bb-panel-wrap,
+  .bb-split-wrap,
+  .bb-stepper-wrap,
+  .bb-chapter-header {
+    width: calc(100% - 40px) !important;
+  }
+}
+
 /* Section header */
 .bb-section-header { margin-bottom: 28px; }
 
