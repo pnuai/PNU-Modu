@@ -879,14 +879,23 @@ div[class*="tocCollapsible"],
   box-shadow: 0 8px 40px rgba(21, 101, 192, 0.35) !important;
   padding-top: 80px !important;
   padding-bottom: 80px !important;
-  padding-left: max(40px, calc((100vw - var(--content-max-width)) / 2)) !important;
-  padding-right: max(40px, calc((100vw - var(--content-max-width)) / 2)) !important;
+  
+  max-width: var(--content-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: calc(100% - 48px) !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  padding-left: 60px !important;
+  padding-right: 60px !important;
+  
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
 
 @media (max-width: 768px) {
   .bb-hero {
+    width: calc(100% - 40px) !important;
     padding-top: 52px !important;
     padding-bottom: 52px !important;
     padding-left: 28px !important;
@@ -1323,8 +1332,20 @@ div[class*="tocCollapsible"],
   border-radius: 20px !important;
   position: relative;
   overflow: hidden;
+  
+  max-width: var(--content-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: calc(100% - 48px) !important;
+  
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
+}
+
+@media (max-width: 768px) {
+  .bb-cta {
+    width: calc(100% - 40px) !important;
+  }
 }
 
 .bb-cta::before {
