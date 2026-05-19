@@ -1,4 +1,3 @@
-const yaml = require('js-yaml');
 const { visit } = require('unist-util-visit');
 
 function remarkBrochureDirectives() {
@@ -46,7 +45,7 @@ function remarkBrochureDirectives() {
           return '';
         };
 
-        const rawBody = node.children ? node.children.map(toMarkdownText).join('').trim() : '';
+        const rawBody = (node.children ? node.children.map(toMarkdownText).join('') : '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
 
         // 2. 메타 속성부와 리스트 목록부를 분리하여 YAML 파싱 수행
         let parsedProps = {};
@@ -60,6 +59,26 @@ function remarkBrochureDirectives() {
             if (m) props[m[1]] = m[2].trim();
           }
           return props;
+        };
+
+        // YAML list (- key: value) 직접 파싱 — js-yaml 없이 안전하게 처리
+        const parseYamlList = (lines) => {
+          const items = [];
+          let current = null;
+          for (const line of lines) {
+            const listItemMatch = line.match(/^-\s+(.*)/);
+            if (listItemMatch) {
+              current = {};
+              items.push(current);
+              const rest = listItemMatch[1].trim();
+              const kvMatch = rest.match(/^([a-zA-Z0-9_-]+):\s*(.*)/);
+              if (kvMatch) current[kvMatch[1]] = kvMatch[2].trim();
+            } else if (current !== null) {
+              const indented = line.match(/^\s{2,}([a-zA-Z0-9_-]+):\s*(.*)/);
+              if (indented) current[indented[1]] = indented[2].trim();
+            }
+          }
+          return items;
         };
 
         const toBase64 = (arr) => {
@@ -90,16 +109,12 @@ function remarkBrochureDirectives() {
             parsedProps = parseMetaLines(metaLines);
 
             if (leftLines.length) {
-              try {
-                const leftObj = yaml.load(leftLines.join('\n').trim());
-                if (Array.isArray(leftObj)) parsedProps['left-items'] = toBase64(leftObj);
-              } catch (_) {}
+              const leftObj = parseYamlList(leftLines);
+              if (leftObj.length > 0) parsedProps['left-items'] = toBase64(leftObj);
             }
             if (rightLines.length) {
-              try {
-                const rightObj = yaml.load(rightLines.join('\n').trim());
-                if (Array.isArray(rightObj)) parsedProps['right-items'] = toBase64(rightObj);
-              } catch (_) {}
+              const rightObj = parseYamlList(rightLines);
+              if (rightObj.length > 0) parsedProps['right-items'] = toBase64(rightObj);
             }
           } else {
             // 일반 디렉티브: 메타 줄 + 리스트 줄 분리
@@ -116,14 +131,8 @@ function remarkBrochureDirectives() {
             parsedProps = parseMetaLines(metaLines);
 
             if (listLines.length) {
-              try {
-                const listObj = yaml.load(listLines.join('\n').trim());
-                if (Array.isArray(listObj)) rawItemsList = listObj;
-                else if (listObj && typeof listObj === 'object') {
-                  if (listObj.items) rawItemsList = listObj.items;
-                  else parsedProps = { ...parsedProps, ...listObj };
-                }
-              } catch (_) {}
+              const listObj = parseYamlList(listLines);
+              if (listObj.length > 0) rawItemsList = listObj;
             }
           }
         }
