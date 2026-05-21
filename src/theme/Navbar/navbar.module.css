@@ -52,6 +52,11 @@
   -ms-overflow-style: none;
   justify-content: flex-start;
   scroll-behavior: smooth;
+  /* 탭이 적을 땐 오른쪽 정렬, 넘칠 땐 왼쪽부터 자연스럽게 스크롤 */
+}
+
+.tabs > :first-child {
+  margin-inline-start: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
 }
