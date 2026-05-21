@@ -1943,7 +1943,7 @@ function parseFrontmatter(text) {
   let t = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
   // 첫 줄에 공백/탭이 있어도 ---로 시작하면 OK
   const m = t.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
-  if (!m) { console.warn('[admin] frontmatter not detected', t.slice(0, 80)); return {}; }
+  if (!m) return {};
   const out = {};
   m[1].split('\n').forEach(line => {
     // 주석/빈 줄 스킵
@@ -1959,7 +1959,6 @@ function parseFrontmatter(text) {
     }
     out[kv[1]] = v;
   });
-  console.log('[admin] parsed frontmatter:', out);
   return out;
 }
 
@@ -1971,11 +1970,12 @@ async function addFiles(newFiles) {
     const auto = metaFromFilename(f.name);
     let fm = {};
     try { fm = parseFrontmatter(await f.text()); } catch(_) {}
+    const sp = fm.sidebar_position ? parseInt(fm.sidebar_position, 10) : auto.sidebar_position;
     selectedFiles.push({
       file: f,
       id: fm.id || auto.id,
       title: fm.title || '',
-      sidebar_position: fm.sidebar_position || auto.sidebar_position,
+      sidebar_position: sp || '',
       theme: fm.theme || 'public-blue',
       layout: fm.layout || 'cinema',
       description: fm.description || '',
