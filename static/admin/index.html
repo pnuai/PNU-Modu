@@ -1938,19 +1938,28 @@ function metaFromFilename(filename) {
 
 /* ─── 파일 내용의 frontmatter 파싱 ─── */
 function parseFrontmatter(text) {
-  const m = text.match(/^---\s*\n([\s\S]*?)\n---/);
-  if (!m) return {};
+  if (!text) return {};
+  // BOM 제거 + 줄바꿈 정규화 (CRLF/CR → LF)
+  let t = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+  // 첫 줄에 공백/탭이 있어도 ---로 시작하면 OK
+  const m = t.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
+  if (!m) { console.warn('[admin] frontmatter not detected', t.slice(0, 80)); return {}; }
   const out = {};
   m[1].split('\n').forEach(line => {
-    const kv = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+    // 주석/빈 줄 스킵
+    if (/^\s*(#|$)/.test(line)) return;
+    const kv = line.match(/^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.*)$/);
     if (!kv) return;
     let v = kv[2].trim();
+    // 인라인 주석 제거 (값에 # 앞 공백이 있을 때만)
+    v = v.replace(/\s+#.*$/, '').trim();
     // 양쪽 따옴표 제거
     if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
       v = v.slice(1, -1);
     }
     out[kv[1]] = v;
   });
+  console.log('[admin] parsed frontmatter:', out);
   return out;
 }
 
