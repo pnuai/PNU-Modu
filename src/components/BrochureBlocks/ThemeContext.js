@@ -3,28 +3,28 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const themes = {
-  // ── 1~2번 챕터: 기존 공공기관 딥 네이비 블루 ──────────────────────────
+  // ── 1~2번 챕터: 공공 블루 (홈 히어로와 동일한 시원한 머티리얼 블루) ──
   'public-blue': {
     name: 'public-blue',
     label: '공공 블루 (챕터 1~2)',
     tokens: {
-      primary: '#0b1f4e',
-      primaryMid: '#1757c2',
-      primaryLight: '#4a82e4',
+      primary: '#1565c0',
+      primaryMid: '#1976d2',
+      primaryLight: '#1e88e5',
       accent: '#e63312',
       accentSoft: '#ff5533',
       teal: '#6fcbae',
       background: '#f0f4f8',
       cardBg: '#ffffff',
-      border: '#c8d8ec',
+      border: '#dce8f8',
       fontFamily: '"Pretendard", "Noto Sans KR", -apple-system, sans-serif',
       radius: '8px',
       radiusCard: '12px',
-      shadow: '0 4px 20px rgba(11, 31, 78, 0.12)',
-      shadowCard: '0 2px 14px rgba(11, 31, 78, 0.10)',
-      gradientPrimary: 'linear-gradient(160deg, #0b1f4e 0%, #2e6fd4 100%)',
+      shadow: '0 4px 20px rgba(21, 101, 192, 0.18)',
+      shadowCard: '0 2px 14px rgba(21, 101, 192, 0.10)',
+      gradientPrimary: 'linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #1e88e5 100%)',
       gradientAccent: 'linear-gradient(160deg, #e63312 0%, #ff7a00 100%)',
-      heroBg: 'linear-gradient(160deg, #0b1f4e 0%, #1757c2 55%, #4a82e4 100%)',
+      heroBg: 'linear-gradient(135deg, #1565c0 0%, #1976d2 40%, #1e88e5 70%, #1565c0 100%)',
     }
   },
 
