@@ -1933,23 +1933,43 @@ function metaFromFilename(filename) {
   };
 }
 
-function addFiles(newFiles) {
+/* ─── 파일 내용의 frontmatter 파싱 ─── */
+function parseFrontmatter(text) {
+  const m = text.match(/^---\s*\n([\s\S]*?)\n---/);
+  if (!m) return {};
+  const out = {};
+  m[1].split('\n').forEach(line => {
+    const kv = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+    if (!kv) return;
+    let v = kv[2].trim();
+    // 양쪽 따옴표 제거
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+      v = v.slice(1, -1);
+    }
+    out[kv[1]] = v;
+  });
+  return out;
+}
+
+async function addFiles(newFiles) {
   const mds = newFiles.filter(f => f.name.endsWith('.md'));
   if (mds.length !== newFiles.length) alert('.md 파일만 업로드할 수 있습니다.');
-  mds.forEach(f => {
-    if (!selectedFiles.find(x => x.file.name === f.name)) {
-      const auto = metaFromFilename(f.name);
-      selectedFiles.push({
-        file: f,
-        id: auto.id,
-        title: '',
-        sidebar_position: auto.sidebar_position,
-        theme: 'public-blue',
-        layout: 'cinema',
-        description: '',
-      });
-    }
-  });
+  for (const f of mds) {
+    if (selectedFiles.find(x => x.file.name === f.name)) continue;
+    const auto = metaFromFilename(f.name);
+    let fm = {};
+    try { fm = parseFrontmatter(await f.text()); } catch(_) {}
+    selectedFiles.push({
+      file: f,
+      id: fm.id || auto.id,
+      title: fm.title || '',
+      sidebar_position: fm.sidebar_position || auto.sidebar_position,
+      theme: fm.theme || 'public-blue',
+      layout: fm.layout || 'cinema',
+      description: fm.description || '',
+      nav_label: fm.nav_label || '',
+    });
+  }
   renderFileList();
 }
 
@@ -2068,7 +2088,7 @@ document.getElementById('btn-upload').addEventListener('click', async () => {
   }
 
   for (const item of selectedFiles) {
-    const { file, id, title, sidebar_position, theme, layout, description } = item;
+    const { file, id, title, sidebar_position, theme, layout, description, nav_label } = item;
     appendLog(`⬆ ${file.name} 업로드 중…`);
     try {
       /* 원본 텍스트 읽기 */
@@ -2083,6 +2103,7 @@ document.getElementById('btn-upload').addEventListener('click', async () => {
         `id: ${id || file.name.replace(/\.md$/,'').replace(/^\d+[\-_]/,'')}`,
         `title: ${title}`,
         sidebar_position ? `sidebar_position: ${sidebar_position}` : null,
+        nav_label && nav_label.trim() ? `nav_label: ${nav_label.trim()}` : null,
         `theme: ${theme}`,
         `layout: ${layout || 'cinema'}`,
         description.trim() ? `description: "${description.trim().replace(/"/g,"'")}"` : null,
