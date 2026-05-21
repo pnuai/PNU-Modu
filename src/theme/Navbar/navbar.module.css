@@ -42,12 +42,18 @@
 .tabs {
   display: flex;
   align-items: stretch;
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   height: 60px;
   gap: 2px;
   overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
-  justify-content: flex-end;
+  -ms-overflow-style: none;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .tabs::-webkit-scrollbar { display: none; }
@@ -240,7 +246,8 @@
 
 /* 반응형 */
 @media (max-width: 1100px) {
-  .tabs { max-width: calc(100vw - 260px); }
+  .tab { padding: 0 12px; }
+  .tabLabel { font-size: 12px; }
 }
 
 @media (max-width: 768px) {

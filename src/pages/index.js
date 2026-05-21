@@ -23,6 +23,7 @@ export default function Home() {
   const adminUrl = useBaseUrl('/admin/');
   const { siteConfig } = useDocusaurusContext();
   const navItems = siteConfig.customFields?.navItems || [];
+  const firstDocLink = siteConfig.customFields?.firstDocLink || (navItems[0]?.to ?? '/docs/');
   const CHAPTERS = navItems.map((item, i) => ({
     num: item.num || String(i + 1).padStart(2, '0'),
     label: item.label,
@@ -74,7 +75,7 @@ export default function Home() {
                 챕터별로 정리된 {CHAPTERS.length}개 분야를 탐색할 수 있습니다.
               </p>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Link to="/docs/intro" style={{
+                <Link to={firstDocLink} style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: '#ffffff', color: '#1565c0',
                   fontWeight: '800', fontSize: '15px', padding: '13px 28px',
